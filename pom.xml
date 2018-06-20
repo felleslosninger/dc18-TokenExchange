@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>dc18-TokenExchange</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Main project structure</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
