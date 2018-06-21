@@ -66,6 +66,7 @@
 			<version>1.0.9.RELEASE</version>
 		</dependency>
 
+		<!-- For ObjectMapper -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
