@@ -5,6 +5,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.jwt.Jwt;
+import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
@@ -24,21 +26,26 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     }
 
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         OAuth2AccessToken accessToken;
+
+        //Gets access token and returns exception if it is not present
         try {
             accessToken = restTemplate.getAccessToken();
         } catch (OAuth2Exception e) {
             throw new BadCredentialsException("Could not obtain access token", e);
         }
+
+        //Gets claims from id-token and returns exception if they are not present
         try {
             String idToken = accessToken.getAdditionalInformation().get("id_token").toString();
             String kid = JwtHelper.headers(idToken).get("kid");
+
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(idToken, verifier(kid));
-            Map<String, String> authInfo = new ObjectMapper()
-                    .readValue(tokenDecoded.getClaims(), Map.class);
+
+            Map<String, String> authInfo = new ObjectMapper();
+            authInfo.readValue(tokenDecoded.getClaims(), Map.class);
+
             verifyClaims(authInfo);
             OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

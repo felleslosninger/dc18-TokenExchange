@@ -50,4 +50,3 @@ public class IdpOpenIdConnectConfig {
         return new OAuth2RestTemplate(idpOpenId(), clientContext);
     }
 }
-
