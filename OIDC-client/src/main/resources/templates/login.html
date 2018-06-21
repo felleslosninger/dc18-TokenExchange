@@ -3,15 +3,16 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="../static/css.css">
 </head>
 <body>
 
 <h1>Log in:</h1>
 
 <form th:action="@{/loginCredentials}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
+    <div id="div1"><label> User Name : <input type="text" name="username"/> </label></div>
+    <div class="divClass"><label> Password: <input type="password" name="password"/> </label></div>
+    <div class="divClass"><input type="submit" value="Sign In"/></div>
 </form>
 
 </body>

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Controller
 public class OidcController implements WebMvcConfigurer {
 
-    @RequestMapping("/loggedIn")
+    @RequestMapping("/welcome")
     @ResponseBody
     public String home() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
