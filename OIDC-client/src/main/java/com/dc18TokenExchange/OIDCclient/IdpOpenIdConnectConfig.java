@@ -39,7 +39,7 @@ public class IdpOpenIdConnectConfig {
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(accessTokenUri);
         details.setUserAuthorizationUri(userAuthorizationUri);
-        details.setScope(Arrays.asList("openid", "email"));
+        details.setScope(Arrays.asList("openid", "profile"));
         details.setPreEstablishedRedirectUri(redirectUri);
         details.setUseCurrentUri(false);
         return details;
