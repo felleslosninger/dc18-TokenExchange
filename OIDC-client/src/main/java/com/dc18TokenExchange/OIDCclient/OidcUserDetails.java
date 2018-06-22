@@ -9,12 +9,12 @@ import java.util.Map;
 
 public class OidcUserDetails implements UserDetails {
     private String userId;
-    private String locale;
+    private String ui_locales;
     private OAuth2AccessToken token;
 
     public OidcUserDetails(Map<String, String> userInfo, OAuth2AccessToken token) {
         this.userId = userInfo.get("sub");
-        this.locale = userInfo.get("nb");
+        this.ui_locales = userInfo.get("ui_locales");
         this.token = token;
     }
 

@@ -29,12 +29,13 @@ public class IdpOpenIdConnectConfig {
     @Value("${idp.userAuthorizationUri}")
     private String userAuthorizationUri;
 
-    @Value("${idp.redirectUri}")
+    @Value("${idp.redirectUriAt}")
     private String redirectUri;
 
     @Bean
     public OAuth2ProtectedResourceDetails idpOpenId() {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+        System.out.println("Did idpOpenId with" + clientId + clientSecret + accessTokenUri + userAuthorizationUri + redirectUri);
         details.setClientId(clientId);
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(accessTokenUri);
@@ -47,6 +48,7 @@ public class IdpOpenIdConnectConfig {
 
     @Bean
     public OAuth2RestTemplate idpOpenIdTemplate(OAuth2ClientContext clientContext) {
+        System.out.println("Did idOpenIdTemplate");
         return new OAuth2RestTemplate(idpOpenId(), clientContext);
     }
 }

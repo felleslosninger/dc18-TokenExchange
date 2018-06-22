@@ -1,5 +1,6 @@
 package com.dc18TokenExchange.OIDCclient;
 
+
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
@@ -44,25 +45,29 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
     @Value("${idp.jwkUrl}")
     private String jwkUrl;
 
-    @Value("{idp.clientId}")
+    @Value("${idp.clientId}")
     private String clientId;
 
-    @Value("{idp.issuer}")
+    @Value("${idp.issuer}")
     private String issuer;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         OAuth2AccessToken accessToken;
+        System.out.println("Did attemptAuthentication with " + jwkUrl + clientId + issuer);
 
         //Gets access token and returns exception if it is not present
         try {
+            System.out.println("Before at");
             accessToken = restTemplate.getAccessToken();
+            System.out.println("After at");
         } catch (OAuth2Exception e) {
             throw new BadCredentialsException("Could not obtain access token", e);
         }
 
         //Gets claims from id-token and returns exception if they are not present
         try {
+            System.out.println("Tried parsing");
             //Turns ID token into string and finds the kid number
             String idToken = accessToken.getAdditionalInformation().get("id_token").toString();
             String kid = JwtHelper.headers(idToken).get("kid");

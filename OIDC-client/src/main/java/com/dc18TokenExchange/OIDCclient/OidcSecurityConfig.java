@@ -19,16 +19,19 @@ public class OidcSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public OidcFilter openIdConnectFilter() {
+        System.out.println("Did openIdConnectFilter");
         OidcFilter filter = new OidcFilter("/loginCredentials");
         filter.setRestTemplate(restTemplate);
+        System.out.println("Did setRestTemplate");
         return filter;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        System.out.println("Did configure");
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/login").permitAll()
+                .antMatchers("/", "/home", "/login", "/welcome", "/accessCode").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(new OAuth2ClientContextFilter(),

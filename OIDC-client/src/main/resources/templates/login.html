@@ -7,13 +7,13 @@
 </head>
 <body>
 
-<h1>Log in:</h1>
+<div class="container">
+    <h1>Logg inn</h1>
 
-<form th:action="@{/loginCredentials}" method="post">
-    <div id="div1"><label> User Name : <input type="text" name="username"/> </label></div>
-    <div class="divClass"><label> Password: <input type="password" name="password"/> </label></div>
-    <div class="divClass"><input type="submit" value="Sign In"/></div>
-</form>
+    <form th:action="@{/loginCredentials}" method="post">
+        <button class="submitBtn" type="submit">Go</button>
+    </form>
+</div>
 
 </body>
 </html>
