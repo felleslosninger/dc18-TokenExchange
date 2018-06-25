@@ -47,7 +47,7 @@ public class IdpOpenIdConnectConfig {
     }
 
     @Bean
-    public OAuth2RestTemplate idpOpenIdTemplate(OAuth2ClientContext clientContext) {
+    public OAuth2RestTemplate restTemplate(OAuth2ClientContext clientContext) {
         System.out.println("Did idOpenIdTemplate");
         return new OAuth2RestTemplate(idpOpenId(), clientContext);
     }

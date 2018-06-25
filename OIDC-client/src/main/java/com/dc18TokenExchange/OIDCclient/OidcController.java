@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.io.IOException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class OidcController implements WebMvcConfigurer {
@@ -27,11 +28,10 @@ public class OidcController implements WebMvcConfigurer {
 
     @RequestMapping(value="/welcome", params={"code","state"}, method = GET)
     @ResponseBody
-    public String getAT(@RequestParam("code") String codeNum, @RequestParam("state") String stateNum) throws IOException {
+    public String getAT(@RequestParam("code") String codeNum, @RequestParam("state") String stateNum) throws Exception {
 
-        OidcTokenRetrieval otr = new OidcTokenRetrieval(codeNum);
-
-        otr.sendTokenReq(codeNum);
+        OidcPostRequest or = new OidcPostRequest(codeNum);
+        or.sendPost();
 
         return "Herro!";
     }

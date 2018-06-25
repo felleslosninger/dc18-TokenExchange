@@ -33,12 +33,13 @@ public class OidcTokenRetrieval{
     //private String POST_URL;
 
 
-    public void sendTokenReq(String codeNum) throws IOException {
+    public void sendTokenReq() throws IOException {
 
         //Important parameters and variables
-        String POST_PARAMS = "client_id=" + "oidc_dificamp_test" + "&grant_type=authorization_code&code=" + codeNum + "&redirect_uri=" + "http://localhost:8000/login";
+        String POST_PARAMS = "client_id=" + "oidc_dificamp_test" + "&grant_type=authorization_code&code=" + code + "&redirect_uri=" + "http://localhost:8000/login";
         //String POST_PARAMS = "grant_type=authorization_code&code=" + codeNum + "&redirect_uri=" + "http://localhost:8000/login";
-        String POST_URL = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
+        //String POST_PARAMS = "code=" + code;
+        String POST_URL = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/jwk";
         String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
 
         //For client authorization, client_id:client_secret
@@ -56,8 +57,8 @@ public class OidcTokenRetrieval{
         URL obj = new URL(POST_URL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Http-metode", "POST");
+        con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
         con.setRequestProperty("Authorization", "Basic " + clientAuthEncodedString);
 
