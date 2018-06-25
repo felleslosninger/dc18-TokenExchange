@@ -26,13 +26,19 @@ public class OidcController implements WebMvcConfigurer {
         return "Welcome, " + username;
     }
 
-    @RequestMapping(value="/welcome", params={"code","state"}, method = GET)
+    @RequestMapping(value="/welcome", params={"code","state"})
     @ResponseBody
     public String getAT(@RequestParam("code") String codeNum, @RequestParam("state") String stateNum) throws Exception {
 
+        System.out.println("dette er koden: " +codeNum);
         OidcPostRequest or = new OidcPostRequest(codeNum);
         or.sendPost();
 
+        /*
+      foreslår å putte metodekall via at man trykker på knapp eller redirectes ellernoe,
+      fra netverksdelen av nettsiden ser det ikke ut som om det noen gang blir sendt en post request
+      ikke så rart kanksj med tanke på error 400, men da kansje vi ser litt tydeligere
+         */
         return "Herro!";
     }
 

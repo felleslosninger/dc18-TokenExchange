@@ -7,49 +7,30 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import java.util.Collection;
 import java.util.Map;
 
-public class OidcUserDetails implements UserDetails {
+public class OidcUserDetails {
     private String userId;
-    private String ui_locales;
+    private String pId;
     private OAuth2AccessToken token;
 
     public OidcUserDetails(Map<String, String> userInfo, OAuth2AccessToken token) {
-        this.userId = userInfo.get("sub");
-        this.ui_locales = userInfo.get("ui_locales");
+        this.userId = userInfo.get("kid");
+        this.pId = userInfo.get("pId");
         this.token = token;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    public void setpId(String pId){
+        this.pId = pId;
     }
 
-    @Override
-    public String getPassword() {
-        return null;
+    public String getpId(){
+        return pId;
     }
 
-    @Override
-    public String getUsername() {
-        return null;
+    public void setUserId(String kid){
+        this.userId = kid;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public String getUserId(){
+        return userId;
     }
 }

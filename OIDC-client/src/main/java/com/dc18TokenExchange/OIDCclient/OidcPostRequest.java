@@ -6,13 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,18 +48,24 @@ public class OidcPostRequest {
 
     public void sendPost() throws Exception{
 
-        HttpClient client = new DefaultHttpClient();
+        CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(tokenURL);
 
-        post.setHeader("User-Agent", USER_AGENT);
-        post.setHeader("Authorization", "Basic "+getAuthorization() );
-        post.setHeader("Content-type", "application/x-www-form-urlencoded");
+        post.setHeader(new BasicHeader("User-Agent", USER_AGENT));
+        post.setHeader(new BasicHeader("Authorization", "Basic "+getAuthorization()));
+        post.setHeader(new BasicHeader("Content-type", "application/x-www-form-urlencoded"));
+
+        Header[] headers = post.getAllHeaders();
+        for (int i = 0; i < headers.length; i++){
+            System.out.println("header: " + headers[i].toString());
+        }
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code",code));
         urlParameters.add(new BasicNameValuePair("grant_type","authorization_code"));
-        urlParameters.add(new BasicNameValuePair("client_id",clientId));
-        urlParameters.add(new BasicNameValuePair("redirect_uri",redirectUri));
+        urlParameters.add(new BasicNameValuePair("client_id", clientId));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", redirectUri));
+        System.out.println("dette er urlParameterene; " +urlParameters);
 
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -64,6 +75,13 @@ public class OidcPostRequest {
         System.out.println("Post parameters : " + post.getEntity());
         System.out.println("Response Code : " +
                 response.getStatusLine().getStatusCode());
+
+        /*
+        Print ut fra header/parameters og fra entity stemmer ikke overens.
+        Virker som om httprequesten ikke sender med alle parameterne??
+        hm
+         */
+
 
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
@@ -75,5 +93,7 @@ public class OidcPostRequest {
         }
 
         System.out.println(result.toString());
+
+        client.close();
     }
 }

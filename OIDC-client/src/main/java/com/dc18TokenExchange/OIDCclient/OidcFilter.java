@@ -85,7 +85,7 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
 
             //Creates new user and adds it to a new authentication token
             OidcUserDetails user = new OidcUserDetails(authInfo, accessToken);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user, null, null);
         } catch (InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
         } catch (Exception e) {
