@@ -43,7 +43,7 @@ public class OidcTokenRetrieval{
         String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
 
         //For client authorization, client_id:client_secret
-        String clientAuth = "oidc_dificamp_test:63a83c5c-617b-4f08-a9ec-244502185db7";
+        String clientAuth = "oidc_dificamp_test:a865d76b-0bb2-45b4-92a0-109767da5c7d";
         byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
         String clientAuthEncodedString = new String(clientAuthEncoded);
 

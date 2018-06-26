@@ -32,7 +32,7 @@ public class OidcPostRequest {
 
     String clientId = "oidc_dificamp_test";
 
-    String clientSecret = "63a83c5c-617b-4f08-a9ec-244502185db7";
+    String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
 
     String redirectUri = "http://localhost:8000/welcome";
 
@@ -61,7 +61,7 @@ public class OidcPostRequest {
         }
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("code",code));
+        //urlParameters.add(new BasicNameValuePair("code",code));
         urlParameters.add(new BasicNameValuePair("grant_type","authorization_code"));
         urlParameters.add(new BasicNameValuePair("client_id", clientId));
         urlParameters.add(new BasicNameValuePair("redirect_uri", redirectUri));
@@ -69,6 +69,8 @@ public class OidcPostRequest {
 
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+
 
         HttpResponse response = client.execute(post);
         System.out.println("\nSending 'POST' request to URL : " + tokenURL);

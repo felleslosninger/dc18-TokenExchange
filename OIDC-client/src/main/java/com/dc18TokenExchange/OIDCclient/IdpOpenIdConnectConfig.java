@@ -17,20 +17,20 @@ import java.util.Arrays;
 @EnableOAuth2Client
 public class IdpOpenIdConnectConfig {
 
-    @Value("${idp.clientId}")
-    private String clientId;
+    //@Value("${idp.clientId}")
+    private String clientId = "oidc_dificamp_test";
 
-    @Value("${idp.clientSecret}")
-    private String clientSecret;
+    //@Value("${idp.clientSecret}")
+    private String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
 
-    @Value("${idp.accessTokenUri}")
-    private String accessTokenUri;
+   // @Value("${idp.accessTokenUri}")
+    private String accessTokenUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
 
-    @Value("${idp.userAuthorizationUri}")
-    private String userAuthorizationUri;
+    //@Value("${idp.userAuthorizationUri}")
+    private String userAuthorizationUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/authorize";
 
-    @Value("${idp.redirectUriAt}")
-    private String redirectUri;
+    //@Value("${idp.redirectUriAt}")
+    private String redirectUri = "http://localhost:8000/welcome";
 
     @Bean
     public OAuth2ProtectedResourceDetails idpOpenId() {
