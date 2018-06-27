@@ -1,36 +1,72 @@
 package com.dc18TokenExchange.OIDCclient;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-public class OidcUserDetails {
-    private String userId;
-    private String pId;
-    private OAuth2AccessToken token;
 
-    public OidcUserDetails(Map<String, String> userInfo, OAuth2AccessToken token) {
-        this.userId = userInfo.get("kid");
+@Data
+@Builder
+@AllArgsConstructor
+
+public class OidcUserDetails implements UserDetails {
+    private String sub;
+    private String pId;
+    private String token;
+
+
+    public OidcUserDetails(Map<String, String> userInfo, String token) {
+        this.sub = userInfo.get("sub");
         this.pId = userInfo.get("pId");
         this.token = token;
     }
-
-    public void setpId(String pId){
-        this.pId = pId;
+    public  OidcUserDetails(){
+        this(null,null);
     }
 
-    public String getpId(){
-        return pId;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    public void setUserId(String kid){
-        this.userId = kid;
+    @Override
+    public String getPassword() {
+        return null;
     }
 
-    public String getUserId(){
-        return userId;
+    @Override
+    public String getUsername() {
+        return this.pId;
     }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+
 }

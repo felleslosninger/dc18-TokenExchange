@@ -34,18 +34,15 @@ public class OidcController implements WebMvcConfigurer {
         OidcPostRequest or = new OidcPostRequest(codeNum);
         or.sendPost();
 
-        /*
-      foreslår å putte metodekall via at man trykker på knapp eller redirectes ellernoe,
-      fra netverksdelen av nettsiden ser det ikke ut som om det noen gang blir sendt en post request
-      ikke så rart kanksj med tanke på error 400, men da kansje vi ser litt tydeligere
-         */
         return "Herro!";
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("home");
         registry.addViewController("/home").setViewName("home");
-        //registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/error").setViewName("error");
+        registry.addViewController("/logout").setViewName("logout");
+        registry.addViewController("/logout/response").setViewName("logutreg");
     }
 
 }

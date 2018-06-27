@@ -25,6 +25,22 @@
 	</properties>
 
 	<dependencies>
+
+		<!--IDP-->
+		<dependency>
+			<groupId>no.difi.common</groupId>
+			<artifactId>resilience-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>no.difi.common</groupId>
+			<artifactId>kontaktinfo-lib-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>no.difi.common</groupId>
+			<artifactId>idporten-lib-logging</artifactId>
+		</dependency>
+
+		<!-- SPRING-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -84,6 +100,19 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.5</version>
+		</dependency>
+
+		<!--lombok-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+			<version>5.61</version>
 		</dependency>
 
 		<dependency>

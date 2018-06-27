@@ -21,6 +21,9 @@ public class OidcSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2RestTemplate restTemplate;
 
+    private String redirectUri = "http://localhost:8000/welcome";
+
+
     @Bean
     public OidcFilter openIdConnectFilter() {
         System.out.println("Did openIdConnectFilter");
@@ -30,20 +33,34 @@ public class OidcSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+//  @Override
+//  protected void configure(HttpSecurity http) throws Exception {
+//      System.out.println("Did configure");
+//      http
+//              .authorizeRequests()
+//              .antMatchers("/", "/home", "/login", "/welcome", "/accessCode").permitAll()
+//              .anyRequest().authenticated()
+//              .and()
+//              .addFilterAfter(new OAuth2ClientContextFilter(),
+//                      AbstractPreAuthenticatedProcessingFilter.class)
+//              .addFilterAfter(openIdConnectFilter(),
+//                      OAuth2ClientContextFilter.class)
+//              .httpBasic()
+//              .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/loginCredentials"));
+
+//  }
+
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        System.out.println("Did configure");
+    protected void configure(HttpSecurity http) throws Exception{
         http
+                .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
+                .httpBasic()
+                //litt usikker på om det skal brukes redirectUri eller /lohinCredentials
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(redirectUri))
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/home", "/login", "/welcome", "/accessCode").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterAfter(new OAuth2ClientContextFilter(),
-                        AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAfter(openIdConnectFilter(),
-                        OAuth2ClientContextFilter.class)
-                .httpBasic()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/loginCredentials"));
-
+                .anyRequest().authenticated();
     }
 }
