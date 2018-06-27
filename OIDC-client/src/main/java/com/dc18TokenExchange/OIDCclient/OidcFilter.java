@@ -109,17 +109,17 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
 
             //Maps token into string
             ObjectMapper om = new ObjectMapper();
-            //Map<String, String> authInfo = new ObjectMapper();
             Map<String, String> authInfo = om.readValue(tokenDecoded.getClaims(), Map.class);
 
             //Verifies claims matching
-            verifyClaims(authInfo);
             verifyClaims(authInfo);
 
             //Creates new user and adds it to a new authentication token
             OidcUserDetails user = new OidcUserDetails(authInfo, idToken);
             System.out.println("Did attemptAuthentication with " + jwkUrl + clientId + issuer);
+
             return new UsernamePasswordAuthenticationToken(user, null, null);
+
         } catch (InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
         } catch (Exception e) {
@@ -132,6 +132,7 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
     private RsaVerifier verifier(String kid) throws Exception {
         JwkProvider provider = new UrlJwkProvider(new URL(jwkUrl));
         Jwk jwk = provider.get(kid);
+
         return new RsaVerifier((RSAPublicKey) jwk.getPublicKey());
     }
 
@@ -147,15 +148,21 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
 
     @Slf4j
     private static class GotoAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
         public GotoAuthenticationSuccessHandler(String defaultTargetUrl) {
             super(defaultTargetUrl);
             }
+
             private RequestCache requestCache = new HttpSessionRequestCache();
+
         public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
             SavedRequest savedRequest = this.requestCache.getRequest(request, response);
+
             if (savedRequest == null) {
                 super.onAuthenticationSuccess(request, response, authentication);
-            } else {
+            }
+
+            else {
                 this.clearAuthenticationAttributes(request);
                 String targetUrl = savedRequest.getRedirectUrl();
                 URL url = new URL(targetUrl);
@@ -168,6 +175,7 @@ public class OidcFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public void afterPropertiesSet() {
         super.afterPropertiesSet();
+
         IdpOidcClientConfig idpOidcClientConfig = new IdpOidcClientConfig();
         setAuthenticationSuccessHandler(new GotoAuthenticationSuccessHandler(StringUtils.replace(idpOidcClientConfig.getRedirectUri(), "/welcome", "/")));
         }

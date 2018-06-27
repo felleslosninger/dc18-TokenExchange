@@ -25,16 +25,11 @@ import org.springframework.stereotype.Component;
 public class OidcPostRequest {
 
     private final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36";
-
-    String tokenURL = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
-
-    String code;
-
-    String clientId = "oidc_dificamp_test";
-
-    String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
-
-    String redirectUri = "http://localhost:8000/welcome";
+    private String tokenURL = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
+    private String code;
+    private String clientId = "oidc_dificamp_test";
+    private String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
+    private String redirectUri = "http://localhost:8000/welcome";
 
     public OidcPostRequest(String code){
         this.code = code;
@@ -43,6 +38,7 @@ public class OidcPostRequest {
     public String getAuthorization(){
         String clientAuth = clientId+":"+clientSecret;
         byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
+
         return new String(clientAuthEncoded);
     }
 
@@ -61,7 +57,7 @@ public class OidcPostRequest {
         }
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        //urlParameters.add(new BasicNameValuePair("code",code));
+        urlParameters.add(new BasicNameValuePair("code",code));
         urlParameters.add(new BasicNameValuePair("grant_type","authorization_code"));
         urlParameters.add(new BasicNameValuePair("client_id", clientId));
         urlParameters.add(new BasicNameValuePair("redirect_uri", redirectUri));
