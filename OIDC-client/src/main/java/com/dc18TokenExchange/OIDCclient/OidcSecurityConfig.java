@@ -21,7 +21,7 @@ public class OidcSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2RestTemplate restTemplate;
 
-    private String redirectUri = "http://localhost:8000/welcome";
+    private String redirectUri = "http://localhost:8000/hello";
 
 
     @Bean
@@ -44,7 +44,7 @@ public class OidcSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(redirectUri))
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/login", "/welcome", "/accessCode").permitAll()
+                .antMatchers("/", "/home", "/login", "/welcome", "/accessCode", "/hello", "/logout").permitAll()
                 .anyRequest().authenticated();
     }
 }

@@ -21,7 +21,7 @@ public class IdpOpenIdConnectConfig {
     private String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
     private String accessTokenUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
     private String userAuthorizationUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/authorize";
-    private String redirectUri = "http://localhost:8000/welcome";
+    private String redirectUri = "http://localhost:8000/login";
 
     @Bean
     public OAuth2ProtectedResourceDetails idpOpenId() {
