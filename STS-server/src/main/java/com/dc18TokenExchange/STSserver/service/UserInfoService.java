@@ -1,11 +1,17 @@
 package com.dc18TokenExchange.STSserver.service;
 
+import com.dc18TokenExchange.STSserver.exception.ResourceNotFoundException;
+import com.dc18TokenExchange.STSserver.model.UserInfo;
 import com.dc18TokenExchange.STSserver.model.Workplace;
 import com.dc18TokenExchange.STSserver.repository.UserInfoRepository;
+import com.dc18TokenExchange.STSserver.repository.WorkplaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-// This class makes use of the repositories available to the database so that we can retrieve information about the tables. Not currently used, but needs to be implemented rather than in the REST controllers
+// This class makes use of the repositories available to the database so that we can retrieve information about the tables.
 
 @Service
 public class UserInfoService {
@@ -13,7 +19,46 @@ public class UserInfoService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    public Workplace getUserWorkplace(Long userId){
-        return userInfoRepository.findDistinctByUserId(userId).getWorksFor();
+    @Autowired
+    private WorkplaceRepository workplaceRepository;
+
+
+    //Gets all users
+    public Page<UserInfo> getUsers(Pageable pageable){
+        return userInfoRepository.findAll(pageable);
+    }
+
+    //Gets a single user based on userId
+    public UserInfo getDistinctByUserId(Long userId){
+        return userInfoRepository.findDistinctByUserId(userId);
+    }
+
+    //Creates new user
+    public UserInfo createUserInfo(UserInfo userInfo){
+        return userInfoRepository.save(userInfo);
+    }
+
+    //Changes user row
+    public UserInfo updateUserInfo(Long userId, UserInfo userInfo) {
+
+        return userInfoRepository.findById(userId)
+                .map(thisUserInfo -> {
+                    thisUserInfo.setWorksFor(userInfo.getWorksFor());
+                    thisUserInfo.setFirstName(userInfo.getFirstName());
+                    thisUserInfo.setLastName(userInfo.getLastName());
+                    return userInfoRepository.save(thisUserInfo);
+                }
+                ).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+    }
+
+    //Deletes user row
+    public ResponseEntity deleteUserInfo(Long userId) {
+
+        return userInfoRepository.findById(userId)
+                .map(thisUserInfo -> {
+                    userInfoRepository.delete(thisUserInfo);
+                    return ResponseEntity.ok().build();
+                }
+                ).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
     }
 }
