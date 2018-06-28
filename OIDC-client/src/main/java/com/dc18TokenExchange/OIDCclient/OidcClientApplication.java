@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OIDCClientApplication {
+public class OidcClientApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OIDCClientApplication.class, args);
+        SpringApplication.run(OidcClientApplication.class, args);
     }
 }

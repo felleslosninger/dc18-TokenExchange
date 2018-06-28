@@ -1,3 +1,0 @@
-include ':java-jwt'
-project(':java-jwt').projectDir = new File(rootProject.projectDir, '/lib')
-rootProject.name = 'java-jwt-master'
