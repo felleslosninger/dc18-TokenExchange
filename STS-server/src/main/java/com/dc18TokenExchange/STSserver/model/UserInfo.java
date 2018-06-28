@@ -38,7 +38,7 @@ public class UserInfo extends AuditModel {
     private String lastName;
 
     //Sets user affiliation to established organization (can be NULL)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "orgNum", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore

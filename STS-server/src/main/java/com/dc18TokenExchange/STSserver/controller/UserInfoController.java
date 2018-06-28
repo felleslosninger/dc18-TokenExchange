@@ -2,6 +2,7 @@ package com.dc18TokenExchange.STSserver.controller;
 
 
 import com.dc18TokenExchange.STSserver.model.UserInfo;
+import com.dc18TokenExchange.STSserver.model.UserInfoDTO;
 import com.dc18TokenExchange.STSserver.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class UserInfoController {
     }
 
     @PostMapping("/user")
-    public UserInfo createUserInfo(@Valid @RequestBody UserInfo userInfo){
+    public UserInfo createUserInfo(@Valid @RequestBody UserInfoDTO userInfo){ //NOTE: This method generates a UserInfo object, but does NOT accept it as input. Rather, it uses UserInfoDTO as a proxy for generating a new UserInfo object.
         return userInfoService.createUserInfo(userInfo);
     }
 
