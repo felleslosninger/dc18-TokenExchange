@@ -3,8 +3,12 @@ package com.dc18TokenExchange.OIDCclient;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -28,8 +32,8 @@ public class OidcPostRequest {
     private String tokenURL = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
     private String code;
     private String clientId = "oidc_dificamp_test";
-    private String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
-    private String redirectUri = "http://localhost:8000/hello";
+    private String clientSecret = "673f897e-873a-443a-9aa0-e92541534726";
+    private String redirectUri = "http://localhost:8000/welcome";
 
     public OidcPostRequest(String code){
         this.code = code;
@@ -41,6 +45,8 @@ public class OidcPostRequest {
 
         return new String(clientAuthEncoded);
     }
+
+    private String accessToken;
 
     public void sendPost() throws Exception{
 
@@ -74,24 +80,23 @@ public class OidcPostRequest {
         System.out.println("Response Code : " +
                 response.getStatusLine().getStatusCode());
 
-        /*
-        Print ut fra header/parameters og fra entity stemmer ikke overens.
-        Virker som om httprequesten ikke sender med alle parameterne??
-        hm
-         */
-
 
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
 
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
+        Map<String,String> map;
 
-        System.out.println(result.toString());
+        String json = rd.readLine();
 
+        map = new ObjectMapper().readValue(json, HashMap.class);
         client.close();
+
+        System.out.println("AccessToken: " + map.get("access_token"));
+        this.accessToken = map.get("access_token");
     }
+
+    public String getAccessToken(){
+        return accessToken;
+    }
+
 }

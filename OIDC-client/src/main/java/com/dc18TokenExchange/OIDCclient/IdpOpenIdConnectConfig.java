@@ -18,10 +18,10 @@ public class IdpOpenIdConnectConfig {
 
 
     private String clientId = "oidc_dificamp_test";
-    private String clientSecret = "a865d76b-0bb2-45b4-92a0-109767da5c7d";
+    private String clientSecret = "673f897e-873a-443a-9aa0-e92541534726";
     private String accessTokenUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
     private String userAuthorizationUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/authorize";
-    private String redirectUri = "http://localhost:8000/login";
+    private String redirectUri = "http://localhost:8000/welcome";
 
     @Bean
     public OAuth2ProtectedResourceDetails idpOpenId() {
@@ -34,7 +34,7 @@ public class IdpOpenIdConnectConfig {
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(accessTokenUri);
         details.setUserAuthorizationUri(userAuthorizationUri);
-        details.setScope(Arrays.asList("openid", "profile"));
+        details.setScope(Arrays.asList("openid", "profile", "user/kontaktinformasjon.read"));
         details.setPreEstablishedRedirectUri(redirectUri);
         details.setUseCurrentUri(false);
 
