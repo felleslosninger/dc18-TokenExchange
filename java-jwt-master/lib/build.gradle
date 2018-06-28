@@ -57,7 +57,7 @@ test {
     }
 }
 
-task clean(type: Delete) {
+task clean(type: Delete, overwrite: true) {
     delete rootProject.buildDir
     delete 'CHANGELOG.md.release'
 }
