@@ -66,4 +66,9 @@ public class WorkplaceService {
     public Workplace getDistinctWorkplaceByUserId(Long userId){
         return userInfoRepository.findDistinctByUserId(userId).getWorksFor();
     }
+
+    //Returns the workplace as string of a specified user. Used for token generation for the new STS-token returned to the client.
+    public String getDistinctWorkplaceByUserIdAsString(Long userId){
+        return userInfoRepository.findDistinctByUserId(userId).getWorksFor().getOrgName();
+    }
 }
