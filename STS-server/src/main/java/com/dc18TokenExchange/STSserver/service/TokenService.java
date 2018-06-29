@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-    public ResponseEntity generateToken(Long userId){
+    public ResponseEntity generateToken(String accessToken){
+        System.out.println(accessToken);
         return ResponseEntity.ok().build();
     }
 }
