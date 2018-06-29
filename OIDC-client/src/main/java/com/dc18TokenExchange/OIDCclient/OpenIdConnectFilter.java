@@ -80,6 +80,11 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             System.out.println(authInfo.get("iss"));
             System.out.println(authInfo.get("exp").toString());
             verifyClaims(authInfo);
+
+            //localhost:8080/getNewToken
+            //Mottar token fra STS
+            //Bruker accesstoken til user under
+
             OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         } catch (InvalidTokenException e) {
