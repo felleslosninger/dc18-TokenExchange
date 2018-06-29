@@ -1,0 +1,77 @@
+<<<<<<< HEAD
+html{
+=======
+html {
+>>>>>>> VegardUtenV
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+<<<<<<< HEAD
+body{
+=======
+body {
+>>>>>>> VegardUtenV
+    margin: 0;
+    padding: 0;
+    height: 60%;
+    background-color: #EDF0F3;
+<<<<<<< HEAD
+    font-family: Open Sans,sans-serif;
+=======
+    font-family: Open Sans, sans-serif;
+>>>>>>> VegardUtenV
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+<<<<<<< HEAD
+.container{
+=======
+.container {
+>>>>>>> VegardUtenV
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.submitBtn {
+<<<<<<< HEAD
+    -webkit-border-radius: 9;
+    -moz-border-radius: 9;
+    border-radius: 9px;
+    font-family: Arial;
+=======
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    font-family: Arial, serif;
+>>>>>>> VegardUtenV
+    color: #ffffff;
+    font-size: 41px;
+    padding: 29px;
+    background: #3498db;
+    text-decoration: none;
+}
+
+.submitBtn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+<<<<<<< HEAD
+h1{
+    font-family: Sofia-Pro-Medium,Open Sans,sans-serif;
+=======
+h1 {
+    font-family: Sofia-Pro-Medium, Open Sans, sans-serif;
+>>>>>>> VegardUtenV
+    font-size: 100px;
+}
