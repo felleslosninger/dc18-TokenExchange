@@ -1,40 +1,30 @@
 package com.dc18TokenExchange.OIDCclient;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+public class OpenIdConnectUserDetails implements UserDetails {
+    private String userId;
+    private String username;
+    private OAuth2AccessToken token;
+    private String at;
 
-@Data
-@Builder
-@AllArgsConstructor
-
-public class OidcUserDetails implements UserDetails {
-    private String sub;
-    private String pId;
-    private String token;
-
-
-    public OidcUserDetails(Map<String, String> userInfo, String token) {
-        this.sub = userInfo.get("sub");
-        this.pId = userInfo.get("pId");
+    public OpenIdConnectUserDetails(Map<String, Object> userInfo, OAuth2AccessToken token) {
+        this.userId = userInfo.get("aud").toString();
+        this.username = userInfo.get("pid").toString();
         this.token = token;
-    }
-    public  OidcUserDetails(){
-        this(null,null);
+        this.at = token.toString();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Arrays.asList(new SimpleGrantedAuthority(("ROLE_USER")));
     }
 
     @Override
@@ -44,7 +34,7 @@ public class OidcUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.pId;
+        return username;
     }
 
     @Override
@@ -66,7 +56,4 @@ public class OidcUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
-
 }

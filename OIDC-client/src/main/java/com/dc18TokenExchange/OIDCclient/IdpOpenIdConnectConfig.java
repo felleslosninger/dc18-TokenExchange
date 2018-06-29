@@ -1,9 +1,10 @@
 package com.dc18TokenExchange.OIDCclient;
 
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -14,36 +15,43 @@ import java.util.Arrays;
 
 @Configuration
 @EnableOAuth2Client
+@PropertySource("classpath:application.properties")
 public class IdpOpenIdConnectConfig {
+    @Value("${idp.clientId}")
+    private String clientId;
 
+    @Value("${idp.clientSecret}")
+    private String clientSecret;
 
-    private String clientId = "oidc_dificamp_test";
-    private String clientSecret = "673f897e-873a-443a-9aa0-e92541534726";
-    private String accessTokenUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/token";
-    private String userAuthorizationUri = "https://oidc-test1.difi.eon.no/idporten-oidc-provider/authorize";
-    private String redirectUri = "http://localhost:8000/welcome";
+    @Value("${idp.accessTokenUri}")
+    private String accessTokenUri;
+
+    @Value("${idp.userAuthorizationUri}")
+    private String userAuthorizationUri;
+
+    @Value("${idp.redirectUri}")
+    private String redirectUri;
 
     @Bean
-    public OAuth2ProtectedResourceDetails idpOpenId() {
-
+    public OAuth2ProtectedResourceDetails googleOpenId() {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-
-        System.out.println("Did idpOpenId with" + clientId + clientSecret + accessTokenUri + userAuthorizationUri + redirectUri);
-
         details.setClientId(clientId);
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(accessTokenUri);
         details.setUserAuthorizationUri(userAuthorizationUri);
-        details.setScope(Arrays.asList("openid", "profile", "user/kontaktinformasjon.read"));
+        details.setScope(Arrays.asList("openid", "profile"));
         details.setPreEstablishedRedirectUri(redirectUri);
         details.setUseCurrentUri(false);
-
         return details;
     }
 
     @Bean
-    public OAuth2RestTemplate restTemplate(OAuth2ClientContext clientContext) {
-        System.out.println("Did idOpenIdTemplate");
-        return new OAuth2RestTemplate(idpOpenId(), clientContext);
+    public OAuth2RestTemplate googleOpenIdTemplate(OAuth2ClientContext clientContext) {
+        return new OAuth2RestTemplate(googleOpenId(), clientContext);
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }
