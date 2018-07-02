@@ -17,7 +17,7 @@ import java.util.Map;
  * The JWTDecoder class holds the decode method to parse a given JWT token into it's JWT representation.
  */
 @SuppressWarnings("WeakerAccess")
-final class JWTDecoder implements DecodedJWT {
+public final class JWTDecoder implements DecodedJWT {
     private final String[] parts;
     private final Header header;
     private final Payload payload;

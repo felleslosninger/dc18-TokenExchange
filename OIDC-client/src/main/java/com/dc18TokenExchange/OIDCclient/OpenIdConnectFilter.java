@@ -4,6 +4,7 @@ import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.Key;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
@@ -48,6 +50,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
     @Value("${idp.clientId}")
     private String clientId;
+
+    @Value("${idp-clientSecret}")
+    private String clientSecret;
 
     @Value("${idp.issuer}")
     private String issuer;
@@ -159,6 +164,7 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("access_token",accessToken));
+        urlParameters.add(new BasicNameValuePair("secret",clientSecret));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -167,10 +173,10 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
         Map<String,String> map;
         String json = rd.readLine();
-        map = new ObjectMapper().readValue(json, HashMap.class);
+        //map = new ObjectMapper().readValue(json, HashMap.class);
         client.close();
 
-        System.out.println(map);
+        System.out.println(json);
     }
 
     @Bean
