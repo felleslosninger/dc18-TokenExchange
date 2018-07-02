@@ -10,4 +10,8 @@ public class TokenService {
         System.out.println(accessToken);
         return ResponseEntity.ok().build();
     }
+
+    public Boolean verifyToken(String accessToken){
+// TODO: Verify token
+    }
 }

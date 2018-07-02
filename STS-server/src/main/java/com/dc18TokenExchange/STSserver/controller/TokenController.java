@@ -19,6 +19,11 @@ public class TokenController {
 
     @PostMapping("/getNewToken")
     public ResponseEntity returnNewToken(@Valid @RequestBody String accessToken){
-        return tokenService.generateToken(accessToken);
+        if(tokenService.verifyToken(accessToken)){
+            return tokenService.generateToken(accessToken);
+        }
+        else{
+            return null;
+        }
     }
 }
