@@ -51,7 +51,7 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     @Value("${idp.clientId}")
     private String clientId;
 
-    @Value("${idp-clientSecret}")
+    @Value("${idp.clientSecret}")
     private String clientSecret;
 
     @Value("${idp.issuer}")
@@ -164,7 +164,6 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("access_token",accessToken));
-        urlParameters.add(new BasicNameValuePair("secret",clientSecret));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 

@@ -32,6 +32,8 @@ public class TokenService {
     @Autowired
     WorkplaceService workplaceService;
 
+    String token;
+
     public TokenService() throws NoSuchProviderException, NoSuchAlgorithmException {
     }
 
@@ -39,6 +41,7 @@ public class TokenService {
         //Recieves and prints the access token.
         String atSubstring = "access_token=";
         accessToken = accessToken.substring(atSubstring.length());
+        this.token = accessToken;
         System.out.println("Recieved access token: "+accessToken);
 
         //Token to Map of diff parts
@@ -80,7 +83,7 @@ public class TokenService {
         return userWorkplace;
     }
 
-    private String getNewToken(Map<String, Object> header, Map<String, Object> body, String newClaim, Object newClaimValue) throws JsonProcessingException{
+    private String getNewToken(Map<String, Object> header, Map<String, Object> body, String newClaim, Object newClaimValue) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Base64 base64Url = new Base64(true);
 
@@ -92,19 +95,25 @@ public class TokenService {
         String bodyEncoded = new String(base64Url.encode(bodyNew.getBytes()));
 
         //TODO: Create new signature
-        String sign = getNewSignature(headerEncoded, bodyEncoded);
+       // String sign = getNewSignature(headerEncoded, bodyEncoded);
 
-        String signatureEncoded = new String(base64Url.encode(sign.getBytes()));
+        //String signatureEncoded = new String(base64Url.encode(sign.getBytes()));
 
-        String tokenNew = headerEncoded + "." + bodyEncoded + "." + signatureEncoded;
+
+        String tokenNew = headerEncoded + "." + bodyEncoded + "." + getSign(token);
         tokenNew = tokenNew.replaceAll("\\r|\\n", "");
         return tokenNew;
     }
 
 
+    private String getSign(String token) throws IOException {
+        String[] split_string = token.split("\\.");
+        String base64EncodedPart = split_string[2];
+        return base64EncodedPart;
+    }
 
-    private String getNewSignature(String headerEncoded, String bodyEncoded) {
-        return null;
+    private String getNewSignature(String headerEncoded, String bodyEncoded) throws IOException {
+        return getSign(token);
     }
 
 }
