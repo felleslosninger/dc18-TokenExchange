@@ -1,22 +1,30 @@
 package com.dc18TokenExchange.STSserver.service;
 
-import com.dc18TokenExchange.STSserver.jwt.JWTCreator;
-import com.dc18TokenExchange.STSserver.jwt.JWTDecoder;
-import com.dc18TokenExchange.STSserver.jwt.interfaces.DecodedJWT;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.binary.Base64;
+
+import org.bouncycastle.jcajce.provider.keystore.BC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+
+import java.security.interfaces.RSAPrivateCrtKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Service
 public class TokenService {
@@ -24,64 +32,28 @@ public class TokenService {
     @Autowired
     WorkplaceService workplaceService;
 
+    public TokenService() throws NoSuchProviderException, NoSuchAlgorithmException {
+    }
+
     public ResponseEntity<String> generateToken(String accessToken) throws IOException, EncoderException {
         //Recieves and prints the access token.
         String atSubstring = "access_token=";
         accessToken = accessToken.substring(atSubstring.length());
         System.out.println("Recieved access token: "+accessToken);
 
-        //Decodes token and splits into header and body
-        String[] split_string = accessToken.split("\\.");
-        String base64EncodedHeader = split_string[0];
-        String base64EncodedBody = split_string[1];
-        String base64EncodedSignature = split_string[2];
-
-        Base64 base64Url = new Base64(true);
-        String header = new String(base64Url.decode(base64EncodedHeader));
-        System.out.println("JWT Header : " + header);
-
-        String body = new String(base64Url.decode(base64EncodedBody));
-        System.out.println("JWT Body : "+body);
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> headerMap = mapper.readValue(header, HashMap.class);
-        Map<String, Object> bodyMap = mapper.readValue(body, HashMap.class);
-
+        //Token to Map of diff parts
+        Map<String, Object> headerMap = getTokenParts(accessToken, 0);
+        Map<String, Object> bodyMap = getTokenParts(accessToken, 1);
 
         //Gets user ID (personnummer) and checks the authentication resource to find out where he/she works.
-        String userPid = bodyMap.get("pid").toString();
-        Long userPidLong = Long.parseLong(userPid);
-        String userWorkplace = workplaceService.getDistinctWorkplaceByUserIdAsString(userPidLong);
+        String userWorkplace = getWork(bodyMap, "pid");
         System.out.println(userWorkplace);
 
-        //Puts the new claim into the body-map and generates a new token with the new claim.
-        bodyMap.put("wrk", userWorkplace);
-        String headerNew = mapper.writeValueAsString(headerMap);
-        String bodyNew = mapper.writeValueAsString(bodyMap);
-        //String headerNew = headerMap.toString();
-        //String bodyNew = bodyMap.toString();
-        //TODO: Create new signature
-        System.out.println(headerNew);
-        System.out.println(bodyNew);
+        String tokenNew = getNewToken(headerMap, bodyMap,"wrk", userWorkplace);
 
-        String headerEncoded = new String(base64Url.encode(headerNew.getBytes()));
-        String bodyEncoded = new String(base64Url.encode(bodyNew.getBytes()));
-        //String signatureEncoded = base64EncodedSignature;  Insert new signature here
-
-        String tokenNew = headerEncoded + "." + bodyEncoded + "." + base64EncodedSignature;
-        tokenNew = tokenNew.replaceAll("\\r|\\n", "");
 
         System.out.println(tokenNew);
 
-
-        /*Code to verify and decode the claims of the JWT
-        Jws<Claims> claims = Jwts.parser()
-                .setSigningKey("bleh")
-                .parseClaimsJws(accessToken);
-
-        System.out.println("Header: " + claims.getHeader());
-        System.out.println("Body: " + claims.getBody());
-        System.out.println("Signature: " + claims.getSignature());*/
 
         return new ResponseEntity<>(tokenNew, HttpStatus.OK);
     }
@@ -90,4 +62,49 @@ public class TokenService {
 // TODO: Verify token
         return true;
     }
+
+    private Map<String,Object> getTokenParts(String token, int part) throws IOException {
+        String[] split_string = token.split("\\.");
+        String base64EncodedPart = split_string[part];
+        Base64 base64Url = new Base64(true);
+        String stringPart = new String(base64Url.decode(base64EncodedPart));
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> partMap = mapper.readValue(stringPart, HashMap.class);
+        return partMap;
+    }
+
+    private String getWork(Map<String, Object> map, String pid){
+        String userPid = map.get(pid).toString();
+        Long userPidLong = Long.parseLong(userPid);
+        String userWorkplace = workplaceService.getDistinctWorkplaceByUserIdAsString(userPidLong);
+        return userWorkplace;
+    }
+
+    private String getNewToken(Map<String, Object> header, Map<String, Object> body, String newClaim, Object newClaimValue) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Base64 base64Url = new Base64(true);
+
+        body.put(newClaim, newClaimValue);
+        String headerNew = mapper.writeValueAsString(header);
+        String bodyNew = mapper.writeValueAsString(body);
+
+        String headerEncoded = new String(base64Url.encode(headerNew.getBytes()));
+        String bodyEncoded = new String(base64Url.encode(bodyNew.getBytes()));
+
+        //TODO: Create new signature
+        String sign = getNewSignature(headerEncoded, bodyEncoded);
+
+        String signatureEncoded = new String(base64Url.encode(sign.getBytes()));
+
+        String tokenNew = headerEncoded + "." + bodyEncoded + "." + signatureEncoded;
+        tokenNew = tokenNew.replaceAll("\\r|\\n", "");
+        return tokenNew;
+    }
+
+
+
+    private String getNewSignature(String headerEncoded, String bodyEncoded) {
+        return null;
+    }
+
 }
