@@ -178,9 +178,11 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         //map = new ObjectMapper().readValue(json, HashMap.class);
         client.close();
 
-        System.out.println(newToken);
+        System.out.println("Recieved token from STS: " + newToken);
 
         String kid = JwtHelper.headers(newToken).get("kid");
+        //newToken = newToken.substring(0,newToken.length()-2);
+        //newToken = newToken + "b";
         System.out.println("Kid is: "+kid);
 
         try {
