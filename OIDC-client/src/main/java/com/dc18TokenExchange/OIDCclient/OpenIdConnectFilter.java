@@ -70,6 +70,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     @Value("${sts.url}")
     private String sts_url;
 
+    @Value("${sts.jwks}")
+    private String sts_jwks;
+
 
     public OAuth2RestOperations restTemplate;
 
@@ -98,7 +101,7 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             String at = accessToken.toString();
             System.out.println("AccessToken: " + at);
             String kid = JwtHelper.headers(at).get("kid");
-            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid));
+            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid, jwkUrl));
             Map<String, Object> authInfo = new ObjectMapper()
                     .readValue(tokenDecoded.getClaims(), Map.class);
             System.out.println(authInfo.keySet());
@@ -130,8 +133,8 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         }
     }
 
-    private RsaVerifier verifier(String kid) throws Exception {
-        JwkProvider provider = new UrlJwkProvider(new URL(jwkUrl));
+    private RsaVerifier verifier(String kid, String url) throws Exception {
+        JwkProvider provider = new UrlJwkProvider(new URL(url));
         Jwk jwk = provider.get(kid);
         return new RsaVerifier((RSAPublicKey) jwk.getPublicKey());
     }
@@ -171,11 +174,23 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         Map<String,String> map;
-        String json = rd.readLine();
+        String newToken = rd.readLine();
         //map = new ObjectMapper().readValue(json, HashMap.class);
         client.close();
 
-        System.out.println(json);
+        System.out.println(newToken);
+
+        String kid = JwtHelper.headers(newToken).get("kid");
+        System.out.println("Kid is: "+kid);
+
+        try {
+            Jwt tokenDecoded = JwtHelper.decodeAndVerify(newToken, verifier(kid, sts_jwks));
+            Map<String, Object> newAuthInfo = new ObjectMapper()
+                    .readValue(tokenDecoded.getClaims(), Map.class);
+            System.out.println(newAuthInfo.keySet());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Bean

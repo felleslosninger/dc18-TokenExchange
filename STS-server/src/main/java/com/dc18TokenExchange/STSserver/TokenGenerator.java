@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,11 +19,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 public class TokenGenerator {
 
+    @Value("${jwks.kid}")
+    private String kid;
+
     @Autowired
     WorkplaceService workplaceService;
 
-    //final Charset asciiCs = Charset.forName("US-ASCII");
-    //final Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
 
     //CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\Users\\camp-pry\\X509_certificate.cer","password");
     private CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\temp\\keystore.jks","password");
@@ -57,6 +59,7 @@ public class TokenGenerator {
         ObjectMapper mapper = new ObjectMapper();
         Base64 base64Url = new Base64(true);
 
+        header.replace("kid", kid);
         body.put(newClaim, newClaimValue);
         String headerNew = null;
         String bodyNew = null;
@@ -96,7 +99,7 @@ public class TokenGenerator {
     public String sign(String encodeText) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         PrivateKey pk = certDetails.getPrivateKey();
-        System.out.println(certDetails.getX509Certificate());
+        //System.out.println(certDetails.getX509Certificate());
 
         Base64 base64 = new Base64(true);
 
