@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public OpenIdConnectFilter openIdConnectFilter() {
-        OpenIdConnectFilter filter = new OpenIdConnectFilter("/welcome");
+        OpenIdConnectFilter filter = new OpenIdConnectFilter("/login");
         filter.setRestTemplate(restTemplate);
         return filter;
     }
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(openIdConnectFilter(),
                         OAuth2ClientContextFilter.class)
                 .httpBasic()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/welcome"))
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated();
