@@ -110,11 +110,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             System.out.println(authInfo.get("exp").toString());
             verifyClaims(authInfo);
 
-            //localhost:8080/getNewToken
-            //Mottar token fra STS
-            //Bruker accesstoken til user under
-
             sendPostToSts(accessToken.toString(), getAuthorization());
+
+            //TODO: Lagre nytt token i local storage med cookie
 
             OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
@@ -144,10 +142,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         Date expireDate = new Date(exp * 1000L);
         Date now = new Date();
         if (!claims.get("iss").equals(issuer) ||
-                !claims.get("aud").equals(clientId)) {
+                !claims.get("aud").equals(clientId) || expireDate.before(now)) {
            throw new RuntimeException("Invalid claims");
         }
-
     }
 
     //Authorizes for STS connection

@@ -6,11 +6,15 @@ import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.dc18TokenExchange.STSserver.TokenGenerator;
+import com.dc18TokenExchange.STSserver.jwt.interfaces.RSAKeyProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.EncoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.jwt.Jwt;
+import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.stereotype.Service;
 
@@ -38,23 +42,35 @@ import static org.mockito.Mockito.when;
 @Service
 public class TokenService {
 
-    public static final long DATE_TOKEN_MS_VALUE = 1477592 * 1000;
+    @Value("${approved.idp.issuer}")
+    private String issuer;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    @Value("${approved.idp.jwk}")
+    private String jwkUrl;
 
-    @Value("${approved.idp.provider}")
-    private String provider;
+    @Value("${approved.aud}")
+    private String aud;
 
     @Autowired
     TokenGenerator tokenGenerator;
 
 
-    public ResponseEntity<String> generateToken(String accessToken) throws IOException, EncoderException {
+    public ResponseEntity<String> generateToken(String accessToken) throws Exception {
         //Recieves and prints the access token.
         String atSubstring = "access_token=";
         accessToken = accessToken.substring(atSubstring.length());
         System.out.println("Recieved access token: " + accessToken);
+
+        //Verifies token signature
+        String kid = JwtHelper.headers(accessToken).get("kid");
+        Jwt tokenDecoded = JwtHelper.decodeAndVerify(accessToken, verifyTokenSignature(kid, jwkUrl));
+
+        //Verifies token claims
+        Map<String, Object> authInfo = new ObjectMapper()
+                .readValue(tokenDecoded.getClaims(), Map.class);
+        System.out.println(authInfo.get("aud"));
+        System.out.println(authInfo.get("iss"));
+        verifyTokenClaims(authInfo);
 
         //Token to Map of diff parts
         Map<String, Object> headerMap = tokenGenerator.getTokenParts(accessToken, 0);
@@ -64,8 +80,8 @@ public class TokenService {
         String userWorkplace = tokenGenerator.getWork(bodyMap, "pid");
         System.out.println(userWorkplace);
 
+        //Generates the token
         String tokenNew = tokenGenerator.getNewToken(headerMap, bodyMap, "wrk", userWorkplace);
-
         System.out.println("New token: " + tokenNew);
 
         return new ResponseEntity<>(tokenNew, HttpStatus.OK);
@@ -77,25 +93,15 @@ public class TokenService {
         return new RsaVerifier((RSAPublicKey) jwk.getPublicKey());
     }
 
-    public Boolean verifyTokenClaims(String token) {
+    public void verifyTokenClaims(Map claims) {
+        int exp = (int) claims.get("exp");
+        Date expireDate = new Date(exp * 1000L);
+        Date now = new Date();
 
-        Date date = new Date(1478891521000L);
-        Clock clock = mock(Clock.class);
-        when(clock.getToday()).thenReturn(new Date(DATE_TOKEN_MS_VALUE));
-
-        JWTVerifier.BaseVerification verification = (JWTVerifier.BaseVerification) JWTVerifier.init(Algorithm.HMAC256("secret"))
-                .acceptExpiresAt(2)
-                .acceptNotBefore(2);
-
-        DecodedJWT jwt = verification
-                .withIssuer(provider) //This should be able to check multiple token providers in the future
-                .withSubject("GjCeg75NQyEzXsjM6YSX-lLCuB6iEXZFztn01SeD4ts=")
-                .withAudience("oidc_dificamp_test") //This should be able to verify different clients later in case several clients utilize the STS
-                .acceptLeeway(1234L)
-                .acceptExpiresAt(9999L)
-                .acceptNotBefore(9999L)
-                .build()
-                .verify(token);
-        return (jwt==(notNullValue()));
+        if (!claims.get("iss").equals(issuer) ||
+                !claims.get("aud").equals(aud) || //Should be updated to include several clients in the future.
+                    expireDate.before(now)) {
+            throw new RuntimeException("Invalid claims");
+        }
     }
 }
