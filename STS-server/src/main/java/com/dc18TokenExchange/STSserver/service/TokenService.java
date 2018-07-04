@@ -52,10 +52,11 @@ public class TokenService {
         Map<String, Object> bodyMap = tokenGenerator.getTokenParts(accessToken, 1);
 
         //Gets user ID (personnummer) and checks the authentication resource to find out where he/she works.
-        String userWorkplace = tokenGenerator.getWork(bodyMap, "pid");
+        String userWorkplaceName = tokenGenerator.getWorkName(bodyMap, "pid");
+        Long userWorkplaceNum = tokenGenerator.getWorkNum(bodyMap, "pid");
 
-        //Generates the token
-        String tokenNew = tokenGenerator.getNewToken(headerMap, bodyMap, "wrk", userWorkplace);
+        //Generates the token with workplace name and number
+        String tokenNew = tokenGenerator.getNewToken(headerMap, bodyMap, userWorkplaceName, userWorkplaceNum);
 
         return new ResponseEntity<>(tokenNew, HttpStatus.OK);
     }

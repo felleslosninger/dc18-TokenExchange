@@ -52,21 +52,27 @@ public class TokenGenerator {
     }
 
     //Gets user workplace to be inserted into new token
-    public String getWork(Map<String, Object> map, String pid){
+    public String getWorkName(Map<String, Object> map, String pid){
         String userPid = map.get(pid).toString();
         Long userPidLong = Long.parseLong(userPid);
-        String userWorkplace = workplaceService.getDistinctWorkplaceByUserIdAsString(userPidLong);
-        return userWorkplace;
+        return workplaceService.getDistinctWorkplaceNameByUserIdAsString(userPidLong);
+    }
+
+    public Long getWorkNum(Map<String, Object> map, String pid){
+        String userPid = map.get(pid).toString();
+        Long userPidLong = Long.parseLong(userPid);
+        return workplaceService.getDistinctWorkplaceNumByUserIdAsString(userPidLong);
     }
 
     //Inserts new claims into new token
-    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String newClaim, Object newClaimValue){
+    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String workplaceName, Long workplaceNum){
         ObjectMapper mapper = new ObjectMapper();
         Base64 base64Url = new Base64(true);
 
         header.replace("kid", kid);
         header.replace("iss", iss);
-        body.put(newClaim, newClaimValue);
+        body.put("wrk_name", workplaceName);
+        body.put("wrk_num", workplaceNum);
         String headerNew = null;
         String bodyNew = null;
 
