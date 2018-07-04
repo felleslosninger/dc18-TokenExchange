@@ -4,7 +4,6 @@ import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -14,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -48,6 +48,7 @@ import java.util.*;
 @PropertySource("classpath:application.properties")
 public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
 
+    //Below values are for the IDP connection
     @Value("${idp.clientId}")
     private String clientId;
 
@@ -74,6 +75,13 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     private String sts_jwks;
 
 
+    @Autowired
+    TokenValidation tokenValidation;
+
+    @Autowired
+    STSReciever stsReciever;
+
+
     public OAuth2RestOperations restTemplate;
 
     public OpenIdConnectFilter(String defaultFilterProcessesUrl) {
@@ -87,6 +95,7 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     }
 
 
+    //Obtains token from ID-Porten, parse it and verify signature/claims. Then sends request to STS and recieves a new token with extra information
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
@@ -99,18 +108,14 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         }
         try {
             String at = accessToken.toString();
-            System.out.println("AccessToken: " + at);
             String kid = JwtHelper.headers(at).get("kid");
-            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid, jwkUrl));
+            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, tokenValidation.verifier(kid, jwkUrl));
             Map<String, Object> authInfo = new ObjectMapper()
                     .readValue(tokenDecoded.getClaims(), Map.class);
-            System.out.println(authInfo.keySet());
-            System.out.println(authInfo.get("aud"));
-            System.out.println(authInfo.get("iss"));
-            System.out.println(authInfo.get("exp").toString());
-            verifyClaims(authInfo);
+            tokenValidation.verifyClaims(authInfo, issuer, clientId);
 
-            sendPostToSts(accessToken.toString(), getAuthorization());
+            //Sends token to STS
+            stsReciever.sendPostToSts(accessToken.toString(), stsReciever.getAuthorization(sts_username, sts_password), sts_url, sts_jwks);
 
             //TODO: Lagre nytt token i local storage med cookie
 
@@ -128,67 +133,6 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
         @Override
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
             throw new UnsupportedOperationException("No authentication should be done with this AuthenticationManager");
-        }
-    }
-
-    private RsaVerifier verifier(String kid, String url) throws Exception {
-        JwkProvider provider = new UrlJwkProvider(new URL(url));
-        Jwk jwk = provider.get(kid);
-        return new RsaVerifier((RSAPublicKey) jwk.getPublicKey());
-    }
-
-    public void verifyClaims(Map claims) {
-        int exp = (int) claims.get("exp");
-        Date expireDate = new Date(exp * 1000L);
-        Date now = new Date();
-        if (!claims.get("iss").equals(issuer) ||
-                !claims.get("aud").equals(clientId) || expireDate.before(now)) {
-           throw new RuntimeException("Invalid claims");
-        }
-    }
-
-    //Authorizes for STS connection
-    public String getAuthorization(){
-        String clientAuth = sts_username+":"+sts_password;
-        byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
-        return new String(clientAuthEncoded);
-    }
-
-    //Sends POST to STS, requests new token
-    public void sendPostToSts(String accessToken, String auth) throws IOException {
-        CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost(sts_url);
-
-        post.setHeader(new BasicHeader("Authorization", "Basic "+auth));
-        post.setHeader(new BasicHeader("Content-type", "application/x-www-form-urlencoded"));
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("access_token",accessToken));
-
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-        HttpResponse response = client.execute(post);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-        Map<String,String> map;
-        String newToken = rd.readLine();
-        //map = new ObjectMapper().readValue(json, HashMap.class);
-        client.close();
-
-        System.out.println("Recieved token from STS: " + newToken);
-
-        String kid = JwtHelper.headers(newToken).get("kid");
-        //newToken = newToken.substring(0,newToken.length()-2);
-        //newToken = newToken + "b";
-        System.out.println("Kid is: "+kid);
-
-        try {
-            Jwt tokenDecoded = JwtHelper.decodeAndVerify(newToken, verifier(kid, sts_jwks));
-            Map<String, Object> newAuthInfo = new ObjectMapper()
-                    .readValue(tokenDecoded.getClaims(), Map.class);
-            System.out.println(newAuthInfo.keySet());
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
