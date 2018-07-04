@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -91,6 +92,23 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     public Authentication attemptAuthentication(
             HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
+        try {
+            Cookie[] cookies = request.getCookies();
+            int ok = 0;
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookies.length == 0) {
+                    break;
+                }
+                if (verifyForCookie(cookies[i])) {
+                    ok++;
+                }
+            }
+            if (ok > 0) {
+                return OpenIdConnectUserDetails.getUTToken();
+            }
+        }catch(Exception e){
+            //ignore
+        }
         OAuth2AccessToken accessToken;
         try {
             accessToken = restTemplate.getAccessToken();
@@ -116,8 +134,11 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
             sendPostToSts(accessToken.toString(), getAuthorization());
 
-            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo);
+            user.setOautToken(accessToken);
+            UsernamePasswordAuthenticationToken uttoken =  new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            user.setUTToken(uttoken);
+            return uttoken;
         } catch (InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
         } catch (Exception e) {
@@ -189,6 +210,8 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(newToken, verifier(kid, sts_jwks));
             Map<String, Object> newAuthInfo = new ObjectMapper()
                     .readValue(tokenDecoded.getClaims(), Map.class);
+            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(newAuthInfo);
+            user.setAT(newToken);
             System.out.println(newAuthInfo.keySet());
         } catch (Exception e) {
             e.printStackTrace();
@@ -198,6 +221,21 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    public boolean verifyForCookie(Cookie cookie){
+        String at = cookie.getValue();
+        System.out.println("CookieVal: " + at);
+        try {
+            String kid = JwtHelper.headers(at).get("kid");
+            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid, sts_jwks));
+            Map<String, Object> authInfo = new ObjectMapper()
+                    .readValue(tokenDecoded.getClaims(), Map.class);
+        } catch (Exception e) {
+            //ignore
+            return false;
+        }
+        return true;
     }
 
 }
