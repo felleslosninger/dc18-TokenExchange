@@ -22,6 +22,9 @@ public class TokenGenerator {
     @Value("${jwks.kid}")
     private String kid;
 
+    @Value("${sts.iss}")
+    private String iss;
+
     @Autowired
     WorkplaceService workplaceService;
 
@@ -60,6 +63,7 @@ public class TokenGenerator {
         Base64 base64Url = new Base64(true);
 
         header.replace("kid", kid);
+        header.replace("iss", iss);
         body.put(newClaim, newClaimValue);
         String headerNew = null;
         String bodyNew = null;
