@@ -1,5 +1,6 @@
 package com.dc18TokenExchange.STSserver;
 
+
 import com.dc18TokenExchange.STSserver.service.WorkplaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,13 +23,17 @@ public class TokenGenerator {
     @Value("${jwks.kid}")
     private String kid;
 
+    @Value("${sts.iss}")
+    private String iss;
+
     @Autowired
     WorkplaceService workplaceService;
 
-
-    //CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\Users\\camp-pry\\X509_certificate.cer","password");
+    //Gets STS-private key information
     private CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\temp\\keystore.jks","password");
 
+
+    //Gets claims from received token
     public Map<String,Object> getTokenParts(String token, int part){
         String[] split_string = token.split("\\.");
         String base64EncodedPart = split_string[part];
@@ -46,21 +51,28 @@ public class TokenGenerator {
         return partMap;
     }
 
-    public String getWork(Map<String, Object> map, String pid){
+    //Gets user workplace to be inserted into new token
+    public String getWorkName(Map<String, Object> map, String pid){
         String userPid = map.get(pid).toString();
         Long userPidLong = Long.parseLong(userPid);
-        System.out.println(userPidLong);
-        String userWorkplace = workplaceService.getDistinctWorkplaceByUserIdAsString(userPidLong);
-        System.out.println(userWorkplace);
-        return userWorkplace;
+        return workplaceService.getDistinctWorkplaceNameByUserIdAsString(userPidLong);
     }
 
-    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String newClaim, Object newClaimValue){
+    public Long getWorkNum(Map<String, Object> map, String pid){
+        String userPid = map.get(pid).toString();
+        Long userPidLong = Long.parseLong(userPid);
+        return workplaceService.getDistinctWorkplaceNumByUserIdAsString(userPidLong);
+    }
+
+    //Inserts new claims into new token
+    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String workplaceName, Long workplaceNum){
         ObjectMapper mapper = new ObjectMapper();
         Base64 base64Url = new Base64(true);
 
         header.replace("kid", kid);
-        body.put(newClaim, newClaimValue);
+        header.replace("iss", iss);
+        body.put("wrk_name", workplaceName);
+        body.put("wrk_num", workplaceNum);
         String headerNew = null;
         String bodyNew = null;
 
@@ -80,6 +92,7 @@ public class TokenGenerator {
         return tokenNew;
     }
 
+    //Gets new token signature
     public String getNewSignature(String headerEncoded, String bodyEncoded){
         String toBeEncoded = headerEncoded + "." + bodyEncoded;
         toBeEncoded = toBeEncoded.replaceAll("\\r|\\n", "");
@@ -96,10 +109,10 @@ public class TokenGenerator {
         return null;
     }
 
+    //Signs new token
     public String sign(String encodeText) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
         PrivateKey pk = certDetails.getPrivateKey();
-        //System.out.println(certDetails.getX509Certificate());
 
         Base64 base64 = new Base64(true);
 

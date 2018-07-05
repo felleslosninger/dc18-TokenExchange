@@ -20,7 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class JWTVerifierTest {
-    private static final long DATE_TOKEN_MS_VALUE = 1477592 * 1000;
+    public static final long DATE_TOKEN_MS_VALUE = 1477592 * 1000;
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
