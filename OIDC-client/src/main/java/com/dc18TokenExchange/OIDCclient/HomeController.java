@@ -1,7 +1,6 @@
 package com.dc18TokenExchange.OIDCclient;
 
 
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,16 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 public class HomeController {
     @RequestMapping("/")
     @ResponseBody
-    public String home(@CookieValue(value = "token", defaultValue = "0") String token,
-                       HttpServletResponse response) {
+    public String home(@CookieValue(value = "token", defaultValue = "0") String token, HttpServletResponse response) {
 
-        token = OpenIdConnectUserDetails.getAT();
-
-        Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(3600);
-        response.addCookie(cookie);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return "Welcome! Personnummeret ditt er: " +username;
+        Boolean authenticated = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+        return "Welcome! Personnummeret ditt er: " +username + "\nAuthenticated: " + authenticated;
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {

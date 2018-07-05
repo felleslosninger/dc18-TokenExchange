@@ -16,7 +16,7 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public final class JWTVerifier {
     private final Algorithm algorithm;
-    final Map<String, Object> claims;
+    public final Map<String, Object> claims;
     private final Clock clock;
 
     JWTVerifier(Algorithm algorithm, Map<String, Object> claims, Clock clock) {
@@ -32,7 +32,7 @@ public final class JWTVerifier {
      * @return a JWTVerifier.Verification instance to configure.
      * @throws IllegalArgumentException if the provided algorithm is null.
      */
-    static Verification init(Algorithm algorithm) throws IllegalArgumentException {
+    public static Verification init(Algorithm algorithm) throws IllegalArgumentException {
         return new BaseVerification(algorithm);
     }
 

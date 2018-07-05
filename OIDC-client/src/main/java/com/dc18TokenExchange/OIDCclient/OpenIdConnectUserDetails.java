@@ -13,26 +13,20 @@ import java.util.Map;
 public class OpenIdConnectUserDetails implements UserDetails {
     private String userId;
     private String username;
-    private OAuth2AccessToken token;
-    public static String at;
-    public static UsernamePasswordAuthenticationToken uttoken;
+    public String at;
+    public UsernamePasswordAuthenticationToken upa_token;
 
     public OpenIdConnectUserDetails(Map<String, Object> userInfo) {
         this.userId = userInfo.get("aud").toString();
         this.username = userInfo.get("pid").toString();
     }
 
-    public void setOautToken(OAuth2AccessToken token){
-        this.token = token;
+    public void set_upa_token(UsernamePasswordAuthenticationToken upa_token){
+        this.upa_token = upa_token;
     }
 
-    public void setUTToken(UsernamePasswordAuthenticationToken uttoken){
-        System.out.println("Er inne i setting uttoken");
-        this.uttoken = uttoken;
-    }
-
-    public static UsernamePasswordAuthenticationToken getUTToken(){
-        return uttoken;
+    public UsernamePasswordAuthenticationToken get_upa_token(){
+        return upa_token;
     }
 
 
@@ -42,7 +36,7 @@ public class OpenIdConnectUserDetails implements UserDetails {
     }
 
     @Override
-    public  String getPassword() {
+    public String getPassword() {
         return at;
     }
 
@@ -71,7 +65,7 @@ public class OpenIdConnectUserDetails implements UserDetails {
         return true;
     }
 
-    public static String getAT(){
+    public String getAT(){
         return at;
     }
 
