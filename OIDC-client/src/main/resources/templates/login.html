@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/css.css}" href="../static/css/css.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Logg inn</h1>
+
+    <form th:action="@{/loginCredentials}" method="post">
+        <button class="submitBtn" type="submit">Go</button>
+    </form>
+</div>
+
+</body>
+</html>

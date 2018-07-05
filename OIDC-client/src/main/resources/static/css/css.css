@@ -1,0 +1,55 @@
+html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    height: 60%;
+    background-color: #EDF0F3;
+    font-family: Open Sans,sans-serif;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.submitBtn {
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    color: #ffffff;
+    font-size: 41px;
+    padding: 29px;
+    background: #3498db;
+    text-decoration: none;
+    width: 100%;
+}
+
+a{
+    display: flex;
+    justify-content: center;
+}
+
+.submitBtn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+h1{
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    font-size: 100px;
+}
