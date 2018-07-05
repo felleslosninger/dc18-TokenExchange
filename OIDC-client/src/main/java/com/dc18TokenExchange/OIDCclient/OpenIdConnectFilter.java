@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -81,8 +82,13 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     @Autowired
     STSReciever stsReciever;
 
+    @Autowired
+    SetTokenCookie setTokenCookie;
+
 
     public OAuth2RestOperations restTemplate;
+
+    private OpenIdConnectUserDetails user;
 
     public OpenIdConnectFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
@@ -97,16 +103,38 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
     //Obtains token from ID-Porten, parse it and verify signature/claims. Then sends request to STS and recieves a new token with extra information
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+
+        //Tries to obtain access token from cookie storage, continues if failed. Should be updated to use local storage
+        try {
+            Cookie[] cookies = request.getCookies();
+            int ok = 0;
+            for (int i = 0; i < cookies.length; i++) {
+                if (tokenValidation.verifyForCookie(cookies[i], sts_jwks)) {
+                    ok++;
+                }
+            }
+            if (ok > 0) {
+                //TODO: Verify claims and expiration date
+                //Right now only checks if the access token is there
+
+                return user.get_upa_token();
+            }
+        }catch(Exception e){
+            //Ignore and continue with login with ID-Porten
+        }
+
+        //Below are functions for logging in with ID-Porten and obtaining token
         OAuth2AccessToken accessToken;
+
         try {
             accessToken = restTemplate.getAccessToken();
         } catch (OAuth2Exception e) {
             throw new BadCredentialsException("Could not obtain access token", e);
         }
         try {
+
+            //Gets and parses token from ID-Porten
             String at = accessToken.toString();
             String kid = JwtHelper.headers(at).get("kid");
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, tokenValidation.verifier(kid, jwkUrl));
@@ -114,13 +142,24 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
                     .readValue(tokenDecoded.getClaims(), Map.class);
             tokenValidation.verifyClaims(authInfo, issuer, clientId);
 
+            //Sets cookie for ID-Porten
+            setTokenCookie.setTokenCookie("idp_token", authInfo, accessToken.toString(), response);
+
             //Sends token to STS
-            stsReciever.sendPostToSts(accessToken.toString(), stsReciever.getAuthorization(sts_username, sts_password), sts_url, sts_jwks);
+            Map<String, Object> newAuthInfo = stsReciever.sendPostToSts(accessToken.toString(), stsReciever.getAuthorization(sts_username, sts_password), sts_url, sts_jwks);
+            String newAccessToken = stsReciever.getNewToken();
 
-            //TODO: Lagre nytt token i local storage med cookie
+            //Sets and saves user details and token
+            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(newAuthInfo);
+            this.user = user;
+            UsernamePasswordAuthenticationToken upa_token =  new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            OpenIdConnectUserDetails user = new OpenIdConnectUserDetails(authInfo, accessToken);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            //Sets cookie for STS
+            setTokenCookie.setTokenCookie("sts_token", newAuthInfo, newAccessToken, response);
+
+            user.set_upa_token(upa_token);
+
+            return upa_token;
         } catch (InvalidTokenException e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
         } catch (Exception e) {
@@ -140,5 +179,4 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-
 }

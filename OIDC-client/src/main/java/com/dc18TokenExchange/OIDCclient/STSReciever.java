@@ -28,8 +28,10 @@ public class STSReciever {
     @Autowired
     TokenValidation tokenValidation;
 
+    private String newToken;
+
     //Sends POST to STS, requests new token
-    public void sendPostToSts(String accessToken, String auth, String sts_url, String sts_jwks) throws IOException {
+    public Map<String, Object> sendPostToSts(String accessToken, String auth, String sts_url, String sts_jwks) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(sts_url);
 
@@ -46,18 +48,20 @@ public class STSReciever {
 
         Map<String,String> map;
         String newToken = rd.readLine();
-        //map = new ObjectMapper().readValue(json, HashMap.class);
+        this.newToken = newToken;
+
         client.close();
 
         String kid = JwtHelper.headers(newToken).get("kid");
 
         try {
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(newToken, tokenValidation.verifier(kid, sts_jwks));
-            Map<String, Object> newAuthInfo = new ObjectMapper()
+            return new ObjectMapper()
                     .readValue(tokenDecoded.getClaims(), Map.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     //Authorizes for STS connection
@@ -65,5 +69,9 @@ public class STSReciever {
         String clientAuth = sts_username+":"+sts_password;
         byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
         return new String(clientAuthEncoded);
+    }
+
+    public String getNewToken(){
+        return this.newToken;
     }
 }

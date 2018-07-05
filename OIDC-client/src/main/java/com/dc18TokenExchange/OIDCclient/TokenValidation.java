@@ -3,9 +3,13 @@ package com.dc18TokenExchange.OIDCclient;
 import com.auth0.jwk.Jwk;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.UrlJwkProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.jwt.Jwt;
+import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
@@ -28,5 +32,17 @@ public class TokenValidation {
                 !claims.get("aud").equals(clientId) || expireDate.before(now)) {
             throw new RuntimeException("Invalid claims");
         }
+    }
+
+    public boolean verifyForCookie(Cookie cookie, String url){
+        String at = cookie.getValue();
+        try {
+            String kid = JwtHelper.headers(at).get("kid");
+            Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid, url));
+        } catch (Exception e) {
+            //ignore
+            return false;
+        }
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.dc18TokenExchange.OIDCclient;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,15 +13,22 @@ import java.util.Map;
 public class OpenIdConnectUserDetails implements UserDetails {
     private String userId;
     private String username;
-    private OAuth2AccessToken token;
-    private String at;
+    public String at;
+    public UsernamePasswordAuthenticationToken upa_token;
 
-    public OpenIdConnectUserDetails(Map<String, Object> userInfo, OAuth2AccessToken token) {
+    public OpenIdConnectUserDetails(Map<String, Object> userInfo) {
         this.userId = userInfo.get("aud").toString();
         this.username = userInfo.get("pid").toString();
-        this.token = token;
-        this.at = token.toString();
     }
+
+    public void set_upa_token(UsernamePasswordAuthenticationToken upa_token){
+        this.upa_token = upa_token;
+    }
+
+    public UsernamePasswordAuthenticationToken get_upa_token(){
+        return upa_token;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,7 +37,7 @@ public class OpenIdConnectUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return at;
     }
 
     @Override
@@ -55,5 +63,13 @@ public class OpenIdConnectUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getAT(){
+        return at;
+    }
+
+    public void setAT(String at){
+        this.at = at;
     }
 }
