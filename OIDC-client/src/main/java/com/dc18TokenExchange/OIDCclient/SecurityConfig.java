@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**");
     }
 
     @Bean
@@ -34,14 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterAfter(new OAuth2ClientContextFilter(),
-                        AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAfter(openIdConnectFilter(),
-                        OAuth2ClientContextFilter.class)
-                .httpBasic()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                .and()
+                .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                    .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
+                    .httpBasic()
+                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                    .and()
                 .authorizeRequests()
-                .anyRequest().authenticated();
+                    .antMatchers("/", "/home", "/index", "/error").permitAll()
+                    .anyRequest().authenticated();
     }
 }

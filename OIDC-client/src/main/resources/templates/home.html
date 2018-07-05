@@ -9,9 +9,15 @@
 
 <div class="container">
 
-    <h1>Welcome!</h1>
+    <div sec:authorize="isAnonymous()">
+        <h1 th:inline="text">Welcome!</h1>
+        <a th:href="@{/login}">Click here to log in</a>
+    </div>
 
-    <a th:href="@{/login}">Click here to log in</a>
+    <div sec:authorize="isAuthenticated()">
+        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    </div>
+
 
 </div>
 

@@ -39,7 +39,7 @@ public class IdpOpenIdConnectConfig {
         details.setClientSecret(clientSecret);
         details.setAccessTokenUri(accessTokenUri);
         details.setUserAuthorizationUri(userAuthorizationUri);
-        details.setScope(Arrays.asList("openid", "profile"));
+        details.setScope(Arrays.asList("openid", "profile", "global/postadresse.read", "user/sertifikat.read", "global/navn.read", "user/varslingsstatus.read", "global/digitalpost.read", "user/digitalpost.read", "user/kontaktinformasjon.read", "global/kontaktinformasjon.read", "dsf-adresse", "global/sertifikat.read", "global/varslingsstatus.read", "dsf-navn", "camp1", "camp2"));
         details.setPreEstablishedRedirectUri(redirectUri);
         details.setUseCurrentUri(false);
         return details;
