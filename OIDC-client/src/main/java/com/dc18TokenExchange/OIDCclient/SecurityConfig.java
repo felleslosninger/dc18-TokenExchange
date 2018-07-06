@@ -24,13 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**", "/static/**");
     }
 
-    @Bean
-    public OpenIdConnectFilter openIdConnectFilter() {
-        OpenIdConnectFilter filter = new OpenIdConnectFilter("/login");
-        filter.setRestTemplate(restTemplate);
-        return filter;
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -40,7 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                     .and()
                 .authorizeRequests()
-                    .antMatchers("/", "/home", "/index", "/error").permitAll()
+                    .antMatchers("/", "/home", "/error").permitAll()
                     .anyRequest().authenticated();
+    }
+
+    @Bean
+    public OpenIdConnectFilter openIdConnectFilter() {
+        OpenIdConnectFilter filter = new OpenIdConnectFilter("/login");
+        filter.setRestTemplate(restTemplate);
+        return filter;
     }
 }

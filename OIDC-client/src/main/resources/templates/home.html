@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Home page</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/css.css}" href="../static/css/css.css">
@@ -16,6 +16,10 @@
 
     <div sec:authorize="isAuthenticated()">
         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+
+        <form th:action="@{/workplace}" method="get">
+            <button class="largeBtn" type="submit">Go to organization page</button>
+        </form>
     </div>
 
 
