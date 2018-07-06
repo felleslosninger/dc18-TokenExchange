@@ -23,8 +23,8 @@ public class OpenIdConnectUserDetails implements UserDetails {
     public UsernamePasswordAuthenticationToken upa_token;
 
     public OpenIdConnectUserDetails(Map<String, Object> userInfo) {
-        this.userId = userInfo.get("aud").toString();
-        this.username = userInfo.get("pid").toString();
+        this.userId = userInfo.get("pid").toString();
+
 
         if(userInfo.containsKey("wrk_num")){
             this.workplaceNum = (int) userInfo.get("wrk_num");
@@ -32,7 +32,6 @@ public class OpenIdConnectUserDetails implements UserDetails {
         else{
             throw new IllegalStateException("No orgNum in token");
         }
-
         if(userInfo.containsKey("wrk_name")){
             this.workplaceName = userInfo.get("wrk_name").toString();
         }
@@ -40,13 +39,13 @@ public class OpenIdConnectUserDetails implements UserDetails {
             throw new IllegalStateException("No orgName in token");
         }
 
+
         if(userInfo.containsKey("f_name")){
             this.first_name = userInfo.get("f_name").toString();
         }
         else{
             throw new IllegalStateException("No first name in token");
         }
-
         if(userInfo.containsKey("l_name")){
             this.last_name = userInfo.get("l_name").toString();
         }

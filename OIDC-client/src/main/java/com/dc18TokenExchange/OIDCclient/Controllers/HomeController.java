@@ -6,8 +6,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -21,6 +19,7 @@ public class HomeController implements WebMvcConfigurer {
     public String getHome(final Model model){
 
         if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+            System.out.println("authenticated");
             OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             String first_name = opid.getFirst_name();
@@ -29,6 +28,7 @@ public class HomeController implements WebMvcConfigurer {
             return "home";
         }
         else{
+            System.out.println("nothenticated");
             return "home";
         }
     }
