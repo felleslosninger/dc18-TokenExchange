@@ -15,7 +15,7 @@
     </div>
 
     <div sec:authorize="isAuthenticated()">
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+        <h1>Hello <span th:text="|${first_name}|"></span>!</h1>
 
         <form th:action="@{/workplace}" method="get">
             <button class="largeBtn" type="submit">Go to organization page</button>

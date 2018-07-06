@@ -16,23 +16,40 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Controller
 public class HomeController implements WebMvcConfigurer {
 
-    private OpenIdConnectUserDetails user;
 
+    @GetMapping(value = {"/", "/home"})
+    public String getHome(final Model model){
+
+        if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+            OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            String first_name = opid.getFirst_name();
+            model.addAttribute("first_name", first_name);
+
+            return "home";
+        }
+        else{
+            return "home";
+        }
+    }
 
     @GetMapping("/workplace")
     public String getWorkplace(final Model model){
         OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String work_name = opid.getWorkplaceName();
+        String first_name = opid.getFirst_name();
+
         model.addAttribute("work_name", work_name);
+        model.addAttribute("first_name", first_name);
 
         return "workplace";
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/home").setViewName("home");
-        registry.addViewController("/").setViewName("home");
-        registry.addViewController("/error").setViewName("error");
+        //registry.addViewController("/home").setViewName("home");
+        //registry.addViewController("/").setViewName("home");
+        //registry.addViewController("/error").setViewName("error");
         //registry.addViewController("/workplace").setViewName("workplace");
         //registry.addViewController("/login").setViewName("login");
     }
