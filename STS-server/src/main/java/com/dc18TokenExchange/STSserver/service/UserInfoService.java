@@ -79,4 +79,15 @@ public class UserInfoService {
                 }
                 ).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
     }
+
+
+    //Returns users first name as string
+    public String getUserInfoFirstNameAsString(Long userId){
+        return userInfoRepository.findDistinctByUserId(userId).getFirstName();
+    }
+
+    //Returns users last name as string
+    public String getUserInfoLastNameAsString(Long userId){
+        return userInfoRepository.findDistinctByUserId(userId).getLastName();
+    }
 }

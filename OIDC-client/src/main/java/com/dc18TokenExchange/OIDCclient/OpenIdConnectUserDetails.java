@@ -8,17 +8,50 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class OpenIdConnectUserDetails implements UserDetails {
     private String userId;
     private String username;
+    private String firstName;
+    private String lastName;
+    private String workplaceName;
+    private int workplaceNum;
+
     public String at;
     public UsernamePasswordAuthenticationToken upa_token;
 
     public OpenIdConnectUserDetails(Map<String, Object> userInfo) {
-        this.userId = userInfo.get("aud").toString();
-        this.username = userInfo.get("pid").toString();
+        this.userId = userInfo.get("pid").toString();
+
+
+        if(userInfo.containsKey("wrk_num")){
+            this.workplaceNum = (int) userInfo.get("wrk_num");
+        }
+        else{
+            throw new IllegalStateException("No orgNum in token");
+        }
+        if(userInfo.containsKey("wrk_name")){
+            this.workplaceName = userInfo.get("wrk_name").toString();
+        }
+        else{
+            throw new IllegalStateException("No orgName in token");
+        }
+
+
+        if(userInfo.containsKey("f_name")){
+            this.firstName = userInfo.get("f_name").toString();
+        }
+        else{
+            throw new IllegalStateException("No first name in token");
+        }
+        if(userInfo.containsKey("l_name")){
+            this.lastName = userInfo.get("l_name").toString();
+        }
+        else{
+            throw new IllegalStateException("No last name in token");
+        }
     }
 
     public void set_upa_token(UsernamePasswordAuthenticationToken upa_token){
@@ -71,5 +104,37 @@ public class OpenIdConnectUserDetails implements UserDetails {
 
     public void setAT(String at){
         this.at = at;
+    }
+
+    public String getWorkplaceName() {
+        return workplaceName;
+    }
+
+    public void setWorkplaceName(String workplaceName) {
+        this.workplaceName = workplaceName;
+    }
+
+    public int getWorkplaceNum() {
+        return workplaceNum;
+    }
+
+    public void setWorkplaceNum(int workplaceNum) {
+        this.workplaceNum = workplaceNum;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String first_name) {
+        this.firstName = first_name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String last_name) {
+        this.lastName = last_name;
     }
 }

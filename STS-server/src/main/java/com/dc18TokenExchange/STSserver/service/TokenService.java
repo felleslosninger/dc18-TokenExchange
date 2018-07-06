@@ -32,6 +32,12 @@ public class TokenService {
     @Autowired
     TokenValidation tokenValidation;
 
+    @Autowired
+    WorkplaceService workplaceService;
+
+    @Autowired
+    UserInfoService userInfoService;
+
 
     public ResponseEntity<String> generateToken(String accessToken) throws Exception {
         //Recieves and prints the access token.
@@ -51,12 +57,18 @@ public class TokenService {
         Map<String, Object> headerMap = tokenGenerator.getTokenParts(accessToken, 0);
         Map<String, Object> bodyMap = tokenGenerator.getTokenParts(accessToken, 1);
 
-        //Gets user ID (personnummer) and checks the authentication resource to find out where he/she works.
-        String userWorkplaceName = tokenGenerator.getWorkName(bodyMap, "pid");
-        Long userWorkplaceNum = tokenGenerator.getWorkNum(bodyMap, "pid");
+        //Gets user ID (personnummer) and checks the authentication resource to find out where he/she works and what his/her name is.
+        String userPid = bodyMap.get("pid").toString();
+        Long userPidLong = Long.parseLong(userPid);
+
+        String userWorkplaceName = workplaceService.getDistinctWorkplaceNameByUserIdAsString(userPidLong);
+        Long userWorkplaceNum = workplaceService.getDistinctWorkplaceNumByUserIdAsString(userPidLong);
+
+        String firstName = userInfoService.getUserInfoFirstNameAsString(userPidLong);
+        String lastName = userInfoService.getUserInfoLastNameAsString(userPidLong);
 
         //Generates the token with workplace name and number
-        String tokenNew = tokenGenerator.getNewToken(headerMap, bodyMap, userWorkplaceName, userWorkplaceNum);
+        String tokenNew = tokenGenerator.getNewToken(headerMap, bodyMap, userWorkplaceName, userWorkplaceNum, firstName, lastName);
 
         return new ResponseEntity<>(tokenNew, HttpStatus.OK);
     }
