@@ -18,17 +18,15 @@ public class HomeController implements WebMvcConfigurer {
     @GetMapping(value = {"/", "/home"})
     public String getHome(final Model model){
 
-        if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
-            System.out.println("authenticated");
+        if((SecurityContextHolder.getContext().getAuthentication() != null) && !(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString().equals("ROLE_ANONYMOUS"))){
             OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            String first_name = opid.getFirst_name();
+            String first_name = opid.getFirstName();
             model.addAttribute("first_name", first_name);
 
             return "home";
         }
         else{
-            System.out.println("nothenticated");
             return "home";
         }
     }
@@ -38,7 +36,7 @@ public class HomeController implements WebMvcConfigurer {
         OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String work_name = opid.getWorkplaceName();
-        String first_name = opid.getFirst_name();
+        String first_name = opid.getFirstName();
 
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);

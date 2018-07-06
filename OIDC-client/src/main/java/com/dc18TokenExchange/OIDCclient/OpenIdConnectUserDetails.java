@@ -14,8 +14,8 @@ import java.util.Map;
 public class OpenIdConnectUserDetails implements UserDetails {
     private String userId;
     private String username;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String workplaceName;
     private int workplaceNum;
 
@@ -41,13 +41,13 @@ public class OpenIdConnectUserDetails implements UserDetails {
 
 
         if(userInfo.containsKey("f_name")){
-            this.first_name = userInfo.get("f_name").toString();
+            this.firstName = userInfo.get("f_name").toString();
         }
         else{
             throw new IllegalStateException("No first name in token");
         }
         if(userInfo.containsKey("l_name")){
-            this.last_name = userInfo.get("l_name").toString();
+            this.lastName = userInfo.get("l_name").toString();
         }
         else{
             throw new IllegalStateException("No last name in token");
@@ -122,19 +122,19 @@ public class OpenIdConnectUserDetails implements UserDetails {
         this.workplaceNum = workplaceNum;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String first_name) {
+        this.firstName = first_name;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String last_name) {
+        this.lastName = last_name;
     }
 }

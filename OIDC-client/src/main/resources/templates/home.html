@@ -10,15 +10,15 @@
 <div class="container">
 
     <div sec:authorize="isAnonymous()">
-        <h1 th:inline="text">Welcome!</h1>
-        <a th:href="@{/login}">Click here to log in</a>
+        <h1 th:inline="text">Velkommen!</h1>
+        <a th:href="@{/login}">Klikk her for å logge inn</a>
     </div>
 
     <div sec:authorize="isAuthenticated()">
-        <h1>Hello <span th:text="|${first_name}|"></span>!</h1>
+        <h1>Hallo, <span th:text="|${first_name}|"></span>!</h1>
 
         <form th:action="@{/workplace}" method="get">
-            <button class="largeBtn" type="submit">Go to organization page</button>
+            <button class="largeBtn" type="submit">Gå til din organisasjon</button>
         </form>
     </div>
 
