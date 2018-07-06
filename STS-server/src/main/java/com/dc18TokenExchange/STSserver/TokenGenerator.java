@@ -51,21 +51,8 @@ public class TokenGenerator {
         return partMap;
     }
 
-    //Gets user workplace to be inserted into new token
-    public String getWorkName(Map<String, Object> map, String pid){
-        String userPid = map.get(pid).toString();
-        Long userPidLong = Long.parseLong(userPid);
-        return workplaceService.getDistinctWorkplaceNameByUserIdAsString(userPidLong);
-    }
-
-    public Long getWorkNum(Map<String, Object> map, String pid){
-        String userPid = map.get(pid).toString();
-        Long userPidLong = Long.parseLong(userPid);
-        return workplaceService.getDistinctWorkplaceNumByUserIdAsString(userPidLong);
-    }
-
     //Inserts new claims into new token
-    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String workplaceName, Long workplaceNum){
+    public String getNewToken(Map<String, Object> header, Map<String, Object> body, String workplaceName, Long workplaceNum, String firstName, String lastName){
         ObjectMapper mapper = new ObjectMapper();
         Base64 base64Url = new Base64(true);
 
@@ -73,6 +60,8 @@ public class TokenGenerator {
         header.replace("iss", iss);
         body.put("wrk_name", workplaceName);
         body.put("wrk_num", workplaceNum);
+        body.put("f_name", firstName);
+        body.put("l_name", lastName);
         String headerNew = null;
         String bodyNew = null;
 
