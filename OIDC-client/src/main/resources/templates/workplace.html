@@ -8,6 +8,10 @@
 <body>
 
     <h1>Hei, <span th:text="|${first_name}|"></span>! Du arbeider i <span th:text="|${work_name}|"></span>!</h1>
+    <form th:action="@{/home}" >
+        <button class ="smallBtn" type="submit">Gå til startside</button>
+    </form>
+
 
 </body>
 </html>

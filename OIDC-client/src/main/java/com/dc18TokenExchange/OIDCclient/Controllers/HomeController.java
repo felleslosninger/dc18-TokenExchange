@@ -50,5 +50,6 @@ public class HomeController implements WebMvcConfigurer {
         //registry.addViewController("/error").setViewName("error");
         //registry.addViewController("/workplace").setViewName("workplace");
         //registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/logoutpage").setViewName("logoutpage");
     }
 }
