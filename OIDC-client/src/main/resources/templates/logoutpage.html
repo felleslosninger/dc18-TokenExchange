@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Logout</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/css.css}" href="../static/css/css.css">
+</head>
+<body>
+
+    <h1>Du er nå logget ut.</h1>
+    <form th:action="@{/home}" >
+        <button class ="smallBtn" type="submit">Gå til startside</button>
+    </form>
+
+</body>
+</html>
