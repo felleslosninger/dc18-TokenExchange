@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -21,20 +23,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/static/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+
                 .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
                     .addFilterAfter(openIdConnectFilter(), OAuth2ClientContextFilter.class)
                     .httpBasic()
                     .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                     .and()
+                .logout()
+                    .clearAuthentication(true)
+                    .logoutUrl("/logout")
+                    .deleteCookies("sts_token", "idp_token", "JSESSIONID")
+                    .logoutSuccessUrl("/logoutpage")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .permitAll()
+                    .and()
                 .authorizeRequests()
-                    .antMatchers("/", "/home", "/error").permitAll()
+                    .antMatchers("/", "/home", "/error","/logout","/logoutpage").permitAll()
                     .anyRequest().authenticated();
+
     }
 
     @Bean
