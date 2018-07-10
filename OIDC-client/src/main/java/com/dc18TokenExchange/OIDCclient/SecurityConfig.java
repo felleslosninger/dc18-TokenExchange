@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                     .clearAuthentication(true)
                     .logoutUrl("/logout")
-                    .deleteCookies("sts_token", "idp_token", "JSESSIONID")
+                    //.deleteCookies("sts_token", "idp_token", "JSESSIONID")
                     .logoutSuccessUrl("/logoutpage")
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .permitAll()
