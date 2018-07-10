@@ -7,17 +7,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "workplace_info_table")
-public class Workplace /*extends AuditModel */{
-
-    //Generates ID for every organization
-    /*@Id
-    @GeneratedValue(generator = "workplace_generator")
-    @SequenceGenerator(
-            name = "workplace_generator",
-            sequenceName = "workplace_sequence",
-            initialValue = 100000000
-    )
-    private Long id;*/
+public class Workplace /*extends AuditModel */{ //Auditmodel won't work for some reason, server claims all params are null when creating entity
 
     //Organization number for organization (Brønnøysund)
     @Id

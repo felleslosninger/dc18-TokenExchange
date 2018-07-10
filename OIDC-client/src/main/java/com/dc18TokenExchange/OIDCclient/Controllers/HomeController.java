@@ -2,6 +2,8 @@ package com.dc18TokenExchange.OIDCclient.Controllers;
 
 
 import com.dc18TokenExchange.OIDCclient.OpenIdConnectUserDetails;
+import com.dc18TokenExchange.OIDCclient.ResourceGetterServices.GetWorkplaceResources;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.IOException;
 
 
 @Controller
 public class HomeController implements WebMvcConfigurer {
+
+    @Autowired
+    private GetWorkplaceResources getWorkplaceResources;
 
 
     @GetMapping(value = {"/", "/home"})
@@ -32,11 +38,13 @@ public class HomeController implements WebMvcConfigurer {
     }
 
     @GetMapping("/workplace")
-    public String getWorkplace(final Model model){
+    public String getWorkplace(final Model model) throws IOException {
         OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String work_name = opid.getWorkplaceName();
         String first_name = opid.getFirstName();
+
+        /*byte[] workplaceLogo = */getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
 
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);

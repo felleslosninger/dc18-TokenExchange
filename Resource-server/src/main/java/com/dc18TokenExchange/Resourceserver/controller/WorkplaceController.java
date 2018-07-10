@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
+import static sun.security.krb5.Confounder.longValue;
+
 @RestController
 public class WorkplaceController {
 
@@ -45,14 +47,14 @@ public class WorkplaceController {
     }
 
     //Returns the logo for the specific company
-    @GetMapping("/workplace/{orgNum}/logo")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long orgNum){
-        return workplaceService.getLogo(orgNum);
+    @PostMapping("/workplace/logo")
+    public ResponseEntity<byte[]> getImage(@Valid @RequestParam("orgNum") String orgNum){
+        return workplaceService.getLogo(Long.parseLong(orgNum));
     }
 
     //Returns the colors specified as a map, i.e. a theme the organization can use
-    @GetMapping("/workplace/{orgNum}/theme")
-    public ResponseEntity<Map> getTheme(@PathVariable Long orgNum){
-        return workplaceService.getTheme(orgNum);
+    @PostMapping("/workplace/theme")
+    public ResponseEntity<Map> getTheme(@Valid @RequestParam("orgNum") String orgNum){
+        return workplaceService.getTheme(Long.parseLong(orgNum));
     }
 }

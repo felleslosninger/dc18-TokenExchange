@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 @Service
 public class ImageHandling {
 
+    //Saves image as bytes
     public byte[] saveImage(String path){
         File file = new File(path);
         byte[] bFile = new byte[(int) file.length()];
@@ -26,7 +27,8 @@ public class ImageHandling {
         return bFile;
     }
 
-    public void getImage(String newPath, Workplace workplace){
+    //Saves image to a local storage on a hard drive (not used)
+    /*public void getImage(String newPath, Workplace workplace){
         byte[] workplaceImage = workplace.getImage();
 
         try{
@@ -36,5 +38,5 @@ public class ImageHandling {
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 }
