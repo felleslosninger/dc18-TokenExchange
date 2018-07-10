@@ -1,4 +1,4 @@
-package com.dc18TokenExchange.STSserver;
+package com.dc18TokenExchange.Resourceserver;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
-    @Override
+    /*@Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/jwk");
-    }
+        web.ignoring().antMatchers();
+    }*/
 
     @Bean
     @Override

@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "workplace_info_table")
-public class Workplace extends AuditModel {
+public class Workplace /*extends AuditModel */{
 
     //Generates ID for every organization
     /*@Id
@@ -37,8 +37,8 @@ public class Workplace extends AuditModel {
     private String sec_col;
 
     //Bytes for image logo
-    @Lob
-    @Column(name="WORKPLACE_IMAGE", nullable=true, columnDefinition="mediumblob")
+    //@Lob
+    @Column(name="WORKPLACE_IMAGE", nullable=true, columnDefinition="bytea")
     private byte[] image;
 
 

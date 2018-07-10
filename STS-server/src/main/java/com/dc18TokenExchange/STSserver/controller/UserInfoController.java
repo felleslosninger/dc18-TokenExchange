@@ -30,13 +30,13 @@ public class UserInfoController {
     }
 
     @PostMapping("/user")
-    public UserInfo createUserInfo(@Valid @RequestBody UserInfoDAO userInfo){ //NOTE: This method generates a UserInfo object, but does NOT accept it as input. Rather, it uses UserInfoDAO as a proxy for generating a new UserInfo object.
-        return userInfoService.createUserInfo(userInfo);
+    public UserInfo createUserInfo(@Valid @RequestBody UserInfoDAO userInfoDAO){ //NOTE: This method generates a UserInfo object, but does NOT accept it as input. Rather, it uses UserInfoDAO as a proxy for generating a new UserInfo object.
+        return userInfoService.createUserInfo(userInfoDAO);
     }
 
     @PutMapping("/user/{userId}")
-    public UserInfo updateUserInfo(@PathVariable Long userId, @Valid @RequestBody UserInfo userInfo){
-        return userInfoService.updateUserInfo(userId, userInfo);
+    public UserInfo updateUserInfo(@PathVariable Long userId, @Valid @RequestBody UserInfoDAO userInfoDAO){
+        return userInfoService.updateUserInfo(userId, userInfoDAO);
     }
 
     @DeleteMapping("/user/{userId}")
