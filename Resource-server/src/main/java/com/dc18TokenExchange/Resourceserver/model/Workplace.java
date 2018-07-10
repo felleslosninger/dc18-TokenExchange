@@ -1,14 +1,13 @@
-package com.dc18TokenExchange.STSserver.model;
+package com.dc18TokenExchange.Resourceserver.model;
 
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
 @Entity
 @Table(name = "workplace_info_table")
-public class Workplace {
+public class Workplace extends AuditModel {
 
     //Generates ID for every organization
     /*@Id
@@ -29,6 +28,19 @@ public class Workplace {
     @Size(min = 3, max = 30)
     private String orgName;
 
+    //HEX for primary color
+    @NotBlank
+    private String pri_col;
+
+    //HEX for secondary color
+    @NotBlank
+    private String sec_col;
+
+    //Bytes for image logo
+    @Lob
+    @Column(name="WORKPLACE_IMAGE", nullable=true, columnDefinition="mediumblob")
+    private byte[] image;
+
 
     //Getters and setters
     public long getOrgNum() {
@@ -45,5 +57,29 @@ public class Workplace {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public String getPri_col() {
+        return pri_col;
+    }
+
+    public void setPri_col(String pri_col) {
+        this.pri_col = pri_col;
+    }
+
+    public String getSec_col() {
+        return sec_col;
+    }
+
+    public void setSec_col(String sec_col) {
+        this.sec_col = sec_col;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
