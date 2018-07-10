@@ -38,7 +38,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                     .clearAuthentication(true)
                     .logoutUrl("/logout")
-                    .deleteCookies("sts_token", "idp_token", "JSESSIONID")
+                //her trenger vi egt ikke slette cookies om vi vil at det skal være enkelt å logge inn igjen senere,
+                // men det er ok å gjøre for demoens skyld
+                // og evt om man ønsker at flere ulike mennekser skal kunne logge inn etter hverandre, selv om man må manuelt slette cookies fra idp.
+                    //.deleteCookies("sts_token", "idp_token", "JSESSIONID")
                     .logoutSuccessUrl("/logoutpage")
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .permitAll()

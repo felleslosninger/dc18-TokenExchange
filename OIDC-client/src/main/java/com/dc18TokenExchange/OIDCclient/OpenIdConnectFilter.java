@@ -75,6 +75,9 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
     @Value("${sts.jwks}")
     private String sts_jwks;
 
+    @Value("${sts.iss}")
+    private String iss;
+
 
     @Autowired
     TokenValidation tokenValidation;
@@ -107,18 +110,22 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
 
         //Tries to obtain access token from cookie storage, continues if failed. Should be updated to use local storage
         try {
+            int ok =0;
             Cookie[] cookies = request.getCookies();
-            int ok = 0;
             for (int i = 0; i < cookies.length; i++) {
-                if (tokenValidation.verifyForCookie(cookies[i], sts_jwks)) {
-                    ok++;
+                //validerer cookie med sts-token, lar deg logge in uavhengig av idp om valid sts-token
+                if (cookies[i].getName().equals("sts_token")) {
+                    String token = cookies[i].getValue();
+                    Jwt decoded = tokenValidation.verifyForCookie(cookies[i], sts_jwks);
+                    Map inAuthInfo = new ObjectMapper().readValue(decoded.getClaims(), Map.class);
+                    tokenValidation.verifyClaims(inAuthInfo, iss, clientId);
+                    ok ++;
                 }
             }
-            if (ok > 0) {
-                //TODO: Verify claims and expiration date
-                //Right now only checks if the access token is there
-
+            if(ok > 0){
                 return user.get_upa_token();
+               // return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                //begge disse to returnmetodene ser ut til å fungere likt, kan evt kutte ned på kode i user og bruke new her
             }
         }catch(Exception e){
             //Ignore and continue with login with ID-Porten
