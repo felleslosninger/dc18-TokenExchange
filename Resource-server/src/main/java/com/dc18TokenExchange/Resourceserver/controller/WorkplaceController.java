@@ -16,6 +16,7 @@ public class WorkplaceController {
     @Autowired
     private WorkplaceService workplaceService;
 
+
     @GetMapping("/workplace")
     public Page<Workplace> getWorkplaces(Pageable pageable){
         return workplaceService.getWorkplaces(pageable);

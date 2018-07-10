@@ -7,8 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "UserInfoDTO")
-public class UserInfoDTO {
+@Table(name = "UserInfoDAO")
+public class UserInfoDAO {
     //ID for user
     @Id
     private long userId;

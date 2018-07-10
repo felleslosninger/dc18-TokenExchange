@@ -2,8 +2,7 @@ package com.dc18TokenExchange.STSserver.service;
 
 import com.dc18TokenExchange.STSserver.exception.ResourceNotFoundException;
 import com.dc18TokenExchange.STSserver.model.UserInfo;
-import com.dc18TokenExchange.STSserver.model.UserInfoDTO;
-import com.dc18TokenExchange.STSserver.model.Workplace;
+import com.dc18TokenExchange.STSserver.model.UserInfoDAO;
 import com.dc18TokenExchange.STSserver.repository.UserInfoRepository;
 import com.dc18TokenExchange.STSserver.repository.WorkplaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +34,14 @@ public class UserInfoService {
     }
 
     //Creates new user
-    public UserInfo createUserInfo(UserInfoDTO userInfoDTO){ //NOTE: This method generates a UserInfo object, but does NOT accept it as input. Rather, it uses UserInfoDTO as a proxy for generating a new UserInfo object.
+    public UserInfo createUserInfo(UserInfoDAO userInfoDAO){ //NOTE: This method generates a UserInfo object, but does NOT accept it as input. Rather, it uses UserInfoDAO as a proxy for generating a new UserInfo object.
 
         UserInfo userInfo = new UserInfo();
 
-        userInfo.setFirstName(userInfoDTO.getFirstName());
-        userInfo.setLastName(userInfoDTO.getLastName());
-        userInfo.setUserId(userInfoDTO.getUserId());
-        userInfo.setWorksFor(workplaceRepository.findDistinctByOrgNum(userInfoDTO.getOrgNum()));
+        userInfo.setFirstName(userInfoDAO.getFirstName());
+        userInfo.setLastName(userInfoDAO.getLastName());
+        userInfo.setUserId(userInfoDAO.getUserId());
+        userInfo.setWorksFor(workplaceRepository.findDistinctByOrgNum(userInfoDAO.getOrgNum()));
 
         return userInfoRepository.save(userInfo); //This line will just save userInfo as-is
 
