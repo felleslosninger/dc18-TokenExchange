@@ -124,8 +124,6 @@ public class OpenIdConnectFilter extends AbstractAuthenticationProcessingFilter 
             }
             if(ok > 0){
                 return user.get_upa_token();
-               // return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                //begge disse to returnmetodene ser ut til å fungere likt, kan evt kutte ned på kode i user og bruke new her
             }
         }catch(Exception e){
             //Ignore and continue with login with ID-Porten
