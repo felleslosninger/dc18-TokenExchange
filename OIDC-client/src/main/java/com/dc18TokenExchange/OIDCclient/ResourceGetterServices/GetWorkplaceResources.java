@@ -1,5 +1,6 @@
 package com.dc18TokenExchange.OIDCclient.ResourceGetterServices;
 
+import net.minidev.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,6 +14,9 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,26 +44,25 @@ public class GetWorkplaceResources {
         HttpPost post = new HttpPost(url + "/workplace/logo");
 
         post.setHeader(new BasicHeader("Authorization", "Basic "+auth));
-        post.setHeader(new BasicHeader("Content-type", "application/x-www-form-urlencoded"));
+        post.setHeader(new BasicHeader("Content-type", "application/json"));
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("orgNum", orgNumString));
 
+        //String param = new JSONObject().put("orgNum", orgNum).toString();
+
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(post);
-        HttpEntity entity = response.getEntity();
-        //BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        entity.writeTo(baos);
-
-        byte[] logoBytes = baos.toByteArray();
+        //BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContentType()));
+        BufferedImage bi = ImageIO.read(response.getEntity().getContent());
 
         client.close();
 
-        System.out.println(logoBytes.toString());
+        File outputfile = new File("C:\\temp\\newImage.png");
+        ImageIO.write(bi, "png", outputfile);
 
-        saveImage("C:\\temp\\newImage.png", logoBytes);
+        //saveImageWithBytes("C:\\temp\\newImage.png", bi);
         //return logoBytes;
     }
 
@@ -70,7 +73,7 @@ public class GetWorkplaceResources {
         return new String(clientAuthEncoded);
     }
 
-    public void saveImage(String newPath, byte[] logoBytes){
+    public void saveImageWithBytes(String newPath, byte[] logoBytes){
 
         try{
             FileOutputStream fos = new FileOutputStream(newPath);

@@ -10,8 +10,7 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -56,11 +55,11 @@ public class WorkplaceService {
     }
 
     //Changes workplace row
-    public Workplace updateWorkplace(Long orgNum, WorkplaceDAO workplaceDAO) {
+    public Workplace updateWorkplace(WorkplaceDAO workplaceDAO) {
 
         byte[] bFile = imageHandling.saveImage(workplaceDAO.getPath());
 
-        return workplaceRepository.findById(orgNum)
+        return workplaceRepository.findById(workplaceDAO.getOrgNum())
                 .map(thisWorkplace -> {
                             thisWorkplace.setOrgName(workplaceDAO.getOrgName());
                             thisWorkplace.setOrgNum(workplaceDAO.getOrgNum());
@@ -69,7 +68,7 @@ public class WorkplaceService {
                             thisWorkplace.setImage(bFile);
                             return workplaceRepository.save(thisWorkplace);
                         }
-                ).orElseThrow(() -> new ResourceNotFoundException("Organization not found with orgNum " + orgNum));
+                ).orElseThrow(() -> new ResourceNotFoundException("Organization not found with orgNum " + workplaceDAO.getOrgNum()));
     }
 
     //Deletes workplace row
@@ -85,15 +84,19 @@ public class WorkplaceService {
 
 
     //Returns the logo for the specific company
-    public ResponseEntity<byte[]> getLogo(Long orgNum){
+    public HttpEntity<byte[]> getLogo(Long orgNum){
         //imageHandling.getImage(newPath,workplaceRepository.findDistinctByOrgNum(orgNum));
         byte[] logo = workplaceRepository.findDistinctByOrgNum(orgNum).getImage();
 
-        return new ResponseEntity<>(logo, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(logo.length);
+
+        return new HttpEntity<>(logo, headers);
     }
 
     //Returns the colors specified as a map, i.e. a theme the organization can use
-    public ResponseEntity<Map> getTheme(Long orgNum){
+    public HttpEntity<Map> getTheme(Long orgNum){
         //imageHandling.getImage(newPath,workplaceRepository.findDistinctByOrgNum(orgNum));
         Workplace workplace = workplaceRepository.findDistinctByOrgNum(orgNum);
 
@@ -101,6 +104,9 @@ public class WorkplaceService {
         theme.put("pri_col", workplace.getPri_col());
         theme.put("sec_col", workplace.getSec_col());
 
-        return new ResponseEntity<>(theme, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        return new HttpEntity<>(theme, headers);
     }
 }

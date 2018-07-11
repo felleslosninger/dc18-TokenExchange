@@ -6,6 +6,7 @@ import com.dc18TokenExchange.Resourceserver.service.WorkplaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +38,8 @@ public class WorkplaceController {
     }
 
     @PutMapping("/workplace/{orgNum}")
-    public Workplace updateWorkplace(@PathVariable Long orgNum, @Valid @RequestBody WorkplaceDAO workplaceDAO){
-        return workplaceService.updateWorkplace(orgNum, workplaceDAO);
+    public Workplace updateWorkplace(@Valid @RequestBody WorkplaceDAO workplaceDAO){
+        return workplaceService.updateWorkplace(workplaceDAO);
     }
 
     @DeleteMapping("/workplace/{orgNum}")
@@ -48,13 +49,22 @@ public class WorkplaceController {
 
     //Returns the logo for the specific company
     @PostMapping("/workplace/logo")
-    public ResponseEntity<byte[]> getImage(@Valid @RequestParam("orgNum") String orgNum){
-        return workplaceService.getLogo(Long.parseLong(orgNum));
+    public HttpEntity<byte[]> getImage(@Valid @RequestBody String orgNum){
+
+        String orgNumSubstring = "orgNum=";
+        orgNum = orgNum.substring(orgNumSubstring.length());
+        Long orgNumLong = Long.parseLong(orgNum);
+
+        return workplaceService.getLogo(orgNumLong);
     }
 
     //Returns the colors specified as a map, i.e. a theme the organization can use
     @PostMapping("/workplace/theme")
-    public ResponseEntity<Map> getTheme(@Valid @RequestParam("orgNum") String orgNum){
-        return workplaceService.getTheme(Long.parseLong(orgNum));
+    public HttpEntity<Map> getTheme(@Valid @RequestBody Map<String, String> payload){
+
+        Long orgNum = Long.parseLong(payload.get("orgNum"));
+        System.out.println("Payload: " + payload + "\norgNum: " + orgNum);
+
+        return workplaceService.getTheme(orgNum);
     }
 }
