@@ -60,11 +60,12 @@ public class WorkplaceController {
 
     //Returns the colors specified as a map, i.e. a theme the organization can use
     @PostMapping("/workplace/theme")
-    public HttpEntity<Map> getTheme(@Valid @RequestBody Map<String, String> payload){
+    public HttpEntity<Map> getTheme(@Valid @RequestBody String orgNum){
 
-        Long orgNum = Long.parseLong(payload.get("orgNum"));
-        System.out.println("Payload: " + payload + "\norgNum: " + orgNum);
+        String orgNumSubstring = "orgNum=";
+        orgNum = orgNum.substring(orgNumSubstring.length());
+        Long orgNumLong = Long.parseLong(orgNum);
 
-        return workplaceService.getTheme(orgNum);
+        return workplaceService.getTheme(orgNumLong);
     }
 }

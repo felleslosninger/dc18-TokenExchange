@@ -1,7 +1,6 @@
 package com.dc18TokenExchange.OIDCclient.ResourceGetterServices;
 
-import net.minidev.json.JSONObject;
-import org.apache.http.HttpEntity;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -12,6 +11,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -35,7 +36,7 @@ public class GetWorkplaceResources {
 
 
     //Sends request to resource server in order to
-    public void getWorkplaceLogo(int orgNum) throws IOException {
+    public BufferedImage getWorkplaceLogo(int orgNum) throws IOException {
         String auth = makeAuthorization(username, password);
 
         String orgNumString = String.valueOf(orgNum);
@@ -49,18 +50,16 @@ public class GetWorkplaceResources {
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("orgNum", orgNumString));
 
-        //String param = new JSONObject().put("orgNum", orgNum).toString();
-
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         HttpResponse response = client.execute(post);
-        //BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContentType()));
         BufferedImage bi = ImageIO.read(response.getEntity().getContent());
 
         client.close();
 
-        File outputfile = new File("C:\\temp\\newImage.png");
-        ImageIO.write(bi, "png", outputfile);
+        return bi;
+        //File outputfile = new File("C:\\temp\\newImage.png");
+        //ImageIO.write(bi, "png", outputfile);
 
         //saveImageWithBytes("C:\\temp\\newImage.png", bi);
         //return logoBytes;
@@ -83,5 +82,7 @@ public class GetWorkplaceResources {
             e.printStackTrace();
         }
     }
+
+    public 
 }
 
