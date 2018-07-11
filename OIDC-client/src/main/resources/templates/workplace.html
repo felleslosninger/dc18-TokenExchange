@@ -3,14 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Workplace</title>
-    <link rel="stylesheet" th:href="@{/css/css.css}" href="../static/css/css.css" />
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css" />
 </head>
 <body>
 
-    <h1>Hei, <span th:text="|${first_name}|"></span>! Du arbeider i <span th:text="|${work_name}|"></span>!</h1>
-    <form th:action="@{/home}" >
-        <button class ="smallBtn" type="submit">Gå til startside</button>
-    </form>
+<style>
+    .background-image {
+        background-image: url('../img/bg.jpg');
+    }
+</style>
+
+
+<div class="App" >
+    <header class="App-header">
+        <img  th:src="@{/img/difiLogo2.png}" src="../static/img/difiLogo2.png" class ="App-logo" alt = "logo"/>
+    </header>
+    <section class="main_background">
+        <div class="background-image"></div>
+            <div class="w3-container-col">
+                <h1>Hei <span th:text="|${first_name}|"></span>, du arbeider i <span th:text="|${work_name}|"></span>!</h1>
+                <form th:action="@{http://difi.no}" >
+                    <button class ="w3-btn w3-black" type="submit">Til Difi"></span></button>
+                </form>
+
+                <form th:action="@{/home}" >
+                    <button class ="w3-btn w3-black" type="submit">Til startside</button>
+                </form>
+
+            </div>
+    </section>
+</div>
+
 
 
 </body>

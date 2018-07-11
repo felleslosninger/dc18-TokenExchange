@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/img/**", "/fonts/**");
     }
 
     @Override
@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .clearAuthentication(true)
                     .logoutUrl("/logout")
                     //.deleteCookies("sts_token", "idp_token", "JSESSIONID")
+
                     .logoutSuccessUrl("/logoutpage")
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .permitAll()
