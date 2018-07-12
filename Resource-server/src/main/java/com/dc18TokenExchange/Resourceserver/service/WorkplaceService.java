@@ -43,13 +43,16 @@ public class WorkplaceService {
 
         Workplace workplace = new Workplace();
 
-        byte[] bFile = imageHandling.saveImage(workplaceDAO.getPath());
+        byte[] logoFile = imageHandling.saveImage(workplaceDAO.getLogo_path());
+        byte[] backgroundFile = imageHandling.saveImage(workplaceDAO.getBackground_path());
 
         workplace.setOrgName(workplaceDAO.getOrgName());
         workplace.setOrgNum(workplaceDAO.getOrgNum());
         workplace.setPri_col(workplaceDAO.getPri_col());
         workplace.setSec_col(workplaceDAO.getSec_col());
-        workplace.setImage(bFile);
+        workplace.setLogo_img(logoFile);
+        workplace.setBackground_img(backgroundFile);
+        workplace.setHome_url(workplaceDAO.getHome_url());
 
         return workplaceRepository.save(workplace);
     }
@@ -57,7 +60,8 @@ public class WorkplaceService {
     //Changes workplace row
     public Workplace updateWorkplace(WorkplaceDAO workplaceDAO) {
 
-        byte[] bFile = imageHandling.saveImage(workplaceDAO.getPath());
+        byte[] logoFile = imageHandling.saveImage(workplaceDAO.getLogo_path());
+        byte[] backgroundFile = imageHandling.saveImage(workplaceDAO.getBackground_path());
 
         return workplaceRepository.findById(workplaceDAO.getOrgNum())
                 .map(thisWorkplace -> {
@@ -65,7 +69,9 @@ public class WorkplaceService {
                             thisWorkplace.setOrgNum(workplaceDAO.getOrgNum());
                             thisWorkplace.setPri_col(workplaceDAO.getPri_col());
                             thisWorkplace.setPri_col(workplaceDAO.getPri_col());
-                            thisWorkplace.setImage(bFile);
+                            thisWorkplace.setLogo_img(logoFile);
+                            thisWorkplace.setBackground_img(backgroundFile);
+                            thisWorkplace.setHome_url(workplaceDAO.getHome_url());
                             return workplaceRepository.save(thisWorkplace);
                         }
                 ).orElseThrow(() -> new ResourceNotFoundException("Organization not found with orgNum " + workplaceDAO.getOrgNum()));
@@ -83,18 +89,6 @@ public class WorkplaceService {
     }
 
 
-    //Returns the logo for the specific company
-    public HttpEntity<byte[]> getLogo(Long orgNum){
-        //imageHandling.getImage(newPath,workplaceRepository.findDistinctByOrgNum(orgNum));
-        byte[] logo = workplaceRepository.findDistinctByOrgNum(orgNum).getImage();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG);
-        headers.setContentLength(logo.length);
-
-        return new HttpEntity<>(logo, headers);
-    }
-
     //Returns the colors specified as a map, i.e. a theme the organization can use
     public HttpEntity<Map> getTheme(Long orgNum){
         //imageHandling.getImage(newPath,workplaceRepository.findDistinctByOrgNum(orgNum));
@@ -108,5 +102,32 @@ public class WorkplaceService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return new HttpEntity<>(theme, headers);
+    }
+
+    //Returns the logo for the specific company
+    public HttpEntity<byte[]> getLogo(Long orgNum){
+        byte[] logo = workplaceRepository.findDistinctByOrgNum(orgNum).getLogo_img();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(logo.length);
+
+        return new HttpEntity<>(logo, headers);
+    }
+
+    //Returns the provided background for the specific company
+    public HttpEntity<byte[]> getBackground(Long orgNum){
+        byte[] background = workplaceRepository.findDistinctByOrgNum(orgNum).getBackground_img();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(background.length);
+
+        return new HttpEntity<>(background, headers);
+    }
+
+    //Returns the main url for the home page of the specific company
+    public String getHomeUrl(Long orgNum){
+        return workplaceRepository.findDistinctByOrgNum(orgNum).getHome_url();
     }
 }

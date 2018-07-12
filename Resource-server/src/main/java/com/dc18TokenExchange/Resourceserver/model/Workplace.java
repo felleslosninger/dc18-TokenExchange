@@ -29,7 +29,13 @@ public class Workplace /*extends AuditModel */{ //Auditmodel won't work for some
     //Bytes for image logo
     //@Lob
     @Column(name="WORKPLACE_IMAGE", nullable=true, columnDefinition="bytea")
-    private byte[] image;
+    private byte[] logo_img;
+
+    //Bytes for image background
+    @Column(name="WORKPLACE_BACKGROUND_IMAGE", nullable=true, columnDefinition="bytea")
+    private byte[] background_img;
+
+    private String home_url;
 
 
     //Getters and setters
@@ -65,11 +71,27 @@ public class Workplace /*extends AuditModel */{ //Auditmodel won't work for some
         this.sec_col = sec_col;
     }
 
-    public byte[] getImage() {
-        return image;
+    public byte[] getLogo_img() {
+        return logo_img;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setLogo_img(byte[] logo_img) {
+        this.logo_img = logo_img;
+    }
+
+    public byte[] getBackground_img() {
+        return background_img;
+    }
+
+    public void setBackground_img(byte[] background_img) {
+        this.background_img = background_img;
+    }
+
+    public String getHome_url() {
+        return home_url;
+    }
+
+    public void setHome_url(String home_url) {
+        this.home_url = home_url;
     }
 }
