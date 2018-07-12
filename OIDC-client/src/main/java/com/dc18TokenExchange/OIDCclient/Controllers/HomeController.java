@@ -26,7 +26,7 @@ public class HomeController implements WebMvcConfigurer {
             model.addAttribute("first_name", first_name);
         }
         return "home";
-        
+
     }
 
     @GetMapping("/workplace")
@@ -39,6 +39,10 @@ public class HomeController implements WebMvcConfigurer {
 
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);
+
+        String workUrl = work_name.replace(" ", "");
+
+        model.addAttribute("work_url", workUrl);
 
         return "workplace";
     }

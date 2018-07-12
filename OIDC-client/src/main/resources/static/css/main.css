@@ -196,3 +196,26 @@ section {
     padding-right: 20px;
     flex-direction: row;
 }
+
+.w3-btn-work,
+.w3-button-work {
+    border: none;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: #04141d;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 200px;
+    background-color: floralwhite;
+    padding: 15px;
+    margin-top: 4px;
+    font-family: "Webly Sleek", serif;
+    font-size: 16px;
+    opacity: 0.7;
+    font-weight: bold;
+
+}
+
