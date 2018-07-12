@@ -56,16 +56,16 @@ public class UserInfoService {
     }
 
     //Changes user row
-    public UserInfo updateUserInfo(Long userId, UserInfoDAO userInfoDAO) {
+    public UserInfo updateUserInfo(UserInfoDAO userInfoDAO) {
 
-        return userInfoRepository.findById(userId)
+        return userInfoRepository.findById(userInfoDAO.getUserId())
                 .map(thisUserInfo -> {
                     thisUserInfo.setWorksFor(workplaceRepository.findDistinctByOrgNum(userInfoDAO.getOrgNum()));
                     thisUserInfo.setFirstName(userInfoDAO.getFirstName());
                     thisUserInfo.setLastName(userInfoDAO.getLastName());
                     return userInfoRepository.save(thisUserInfo);
                 }
-                ).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+                ).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userInfoDAO.getUserId()));
     }
 
     //Deletes user row

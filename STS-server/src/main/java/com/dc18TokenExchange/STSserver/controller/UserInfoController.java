@@ -34,9 +34,9 @@ public class UserInfoController {
         return userInfoService.createUserInfo(userInfoDAO);
     }
 
-    @PutMapping("/user/{userId}")
-    public UserInfo updateUserInfo(@PathVariable Long userId, @Valid @RequestBody UserInfoDAO userInfoDAO){
-        return userInfoService.updateUserInfo(userId, userInfoDAO);
+    @PutMapping("/user")
+    public UserInfo updateUserInfo(@Valid @RequestBody UserInfoDAO userInfoDAO){
+        return userInfoService.updateUserInfo(userInfoDAO);
     }
 
     @DeleteMapping("/user/{userId}")
