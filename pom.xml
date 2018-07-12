@@ -28,6 +28,7 @@
 	<modules>
 		<module>OIDC-client</module>
 		<module>STS-server</module>
+		<module>Resource-server</module>
 	</modules>
 
 	<!-- Dependencies set in child modules -->

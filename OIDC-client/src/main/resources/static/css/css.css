@@ -18,6 +18,14 @@ body{
 .container{
     display: flex;
     justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.contentContainer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
     flex-direction: column;
 }
 
@@ -34,9 +42,34 @@ body{
     width: 100%;
 }
 
+#workplace_logo{
+    width: 60%;
+    height: 60%;
+}
+
+.logoContainer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 a{
     display: flex;
     justify-content: center;
+}
+
+
+.smallBtn {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    color: #ffffff;
+    font-size: 13px;
+    padding: 9px;
+    background: #3498db;
+    text-decoration: none;
+    width: 100%;
 }
 
 .submitBtn:hover {

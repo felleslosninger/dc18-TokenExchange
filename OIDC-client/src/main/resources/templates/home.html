@@ -3,25 +3,49 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Home page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/css.css}" href="../static/css/css.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../static/css/main.css">
+
 </head>
 <body>
+<style>
+    .background-image {
+        background-image: url('../img/bg.jpg');
+    }
+</style>
 
-<div class="container">
+<div class="App" sec:authorize="isAnonymous()">
+    <header class="App-header">
+        <img  th:src="@{/img/difiLogo2.png}" src="../static/img/difiLogo2.png" class ="App-logo" alt = "logo"/>
+    </header>
+    <section class="main_background">
+        <div class="background-image"></div>
+        <div id ="loginBox" >
+            <div class="w3-container">
+                <h2 id = "loginText">Velkommen!</h2>
+                <a class = "w3-btn w3-black" th:href="@{/login}">Logg inn</a>
+            </div>
+        </div>
+    </section>
+</div>
 
-    <div sec:authorize="isAnonymous()">
-        <h1 th:inline="text">Velkommen!</h1>
-        <a th:href="@{/login}">Klikk her for å logge inn</a>
-    </div>
+<div class="App" sec:authorize="isAuthenticated()">
+    <header class="App-header">
+        <img src="/img/difiLogo2.png" class ="App-logo" alt = "logo"/>
+    </header>
+    <section class = "main_background">
+        <div class="background-image"></div>
+        <h1 id = "Welcome">Velkommen, <span th:text="|${first_name}|"></span>!</h1>
 
-    <div sec:authorize="isAuthenticated()">
-        <h1>Hallo, <span th:text="|${first_name}|"></span>!</h1>
-
-        <form th:action="@{/workplace}" method="get">
-            <button class="largeBtn" type="submit">Gå til din organisasjon</button>
+        <form th:action="@{/workplace}" >
+            <button class ="w3-btn w3-black" type="submit">Din jobb</button>
         </form>
-    </div>
+        <form th:action="@{/logout}" >
+            <button class ="logoutBtn" type="submit">Logg ut</button>
+        </form>
 
+
+
+    </section>
 
 </div>
 

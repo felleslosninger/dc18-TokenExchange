@@ -26,11 +26,14 @@ public class TokenGenerator {
     @Value("${sts.iss}")
     private String iss;
 
+    @Value("${cert.filepath}")
+    private String filepath;
+
+    @Value("${cert.password}")
+    private String password;
+
     @Autowired
     WorkplaceService workplaceService;
-
-    //Gets STS-private key information
-    private CertificateDetails certDetails = CertificateUtil.getCertificateDetails("C:\\temp\\keystore.jks","password");
 
 
     //Gets claims from received token
@@ -57,7 +60,7 @@ public class TokenGenerator {
         Base64 base64Url = new Base64(true);
 
         header.replace("kid", kid);
-        header.replace("iss", iss);
+        body.replace("iss", iss);
         body.put("wrk_name", workplaceName);
         body.put("wrk_num", workplaceNum);
         body.put("f_name", firstName);
@@ -100,6 +103,9 @@ public class TokenGenerator {
 
     //Signs new token
     public String sign(String encodeText) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+
+        //Gets STS-private key information
+        CertificateDetails certDetails = CertificateUtil.getCertificateDetails(filepath,password);
 
         PrivateKey pk = certDetails.getPrivateKey();
 
