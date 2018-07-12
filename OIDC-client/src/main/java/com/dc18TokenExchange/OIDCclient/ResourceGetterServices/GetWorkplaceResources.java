@@ -58,8 +58,6 @@ public class GetWorkplaceResources {
         client.close();
 
         return bi;
-        //File outputfile = new File("C:\\temp\\newImage.png");
-        //ImageIO.write(bi, "png", outputfile);
 
         //saveImageWithBytes("C:\\temp\\newImage.png", bi);
         //return logoBytes;
@@ -70,6 +68,15 @@ public class GetWorkplaceResources {
         String clientAuth = resource_server_username+":"+resource_server_password;
         byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
         return new String(clientAuthEncoded);
+    }
+
+    public byte[] getImageAsBytes(BufferedImage buffer) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(buffer, "png", baos);
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        baos.close();
+        return imageInByte;
     }
 
     public void saveImageWithBytes(String newPath, byte[] logoBytes){
@@ -83,6 +90,5 @@ public class GetWorkplaceResources {
         }
     }
 
-    public 
 }
 

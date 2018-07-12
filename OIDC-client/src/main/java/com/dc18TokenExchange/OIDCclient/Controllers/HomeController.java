@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Base64;
 
 
 @Controller
@@ -46,13 +47,17 @@ public class HomeController implements WebMvcConfigurer {
 
         String work_name = opid.getWorkplaceName();
         String first_name = opid.getFirstName();
-        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
 
-        getWorkplaceResources.saveImageWithBytes("../../../resources/static/img/logo.png", workplace_logo);
+        //Gets image from resource server and converts it to bytes and encodes it with Base64
+        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
+        byte[] bytesImage = getWorkplaceResources.getImageAsBytes(workplace_logo);
+        String stringBase64Image = Base64.getEncoder().encodeToString(bytesImage);
+
+        //getWorkplaceResources.saveImageWithBytes("../../../resources/static/img/logo.png", workplace_logo);
 
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);
-        model.addAttribute("workplace_logo", "/img/logo.png");
+        model.addAttribute("workplace_logo", stringBase64Image);
 
         return "workplace";
     }

@@ -9,12 +9,16 @@
 
 <div class="container">
 
-    <img th:src="|${/workplace/logo}|" src="/workplace/logo">
+    <div class="logoContainer">
+        <img id="workplace_logo" th:src="@{'data:image/jpeg;base64,'+${workplace_logo}}" >
+    </div>
 
-    <h1>Hei, <span th:text="|${first_name}|"></span>! Du arbeider i <span th:text="|${work_name}|"></span>!</h1>
-    <form th:action="@{/home}" >
-        <button class ="smallBtn" type="submit">Gå til startside</button>
-    </form>
+    <div class="contentContainer">
+        <h1>Hei, <span th:text="|${first_name}|"></span>! Du arbeider i <span th:text="|${work_name}|"></span>!</h1>
+        <form th:action="@{/home}" >
+            <button class ="smallBtn" type="submit">Gå til startside</button>
+        </form>
+    </div>
 
 </div>
 
