@@ -18,6 +18,14 @@ body{
 .container{
     display: flex;
     justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.contentContainer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
     flex-direction: column;
 }
 
@@ -32,6 +40,17 @@ body{
     background: #3498db;
     text-decoration: none;
     width: 100%;
+}
+
+#workplace_logo{
+    width: 60%;
+    height: 60%;
+}
+
+.logoContainer{
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 a{

@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:url="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>Workplace</title>
-    <link rel="stylesheet" th:href="@{/css/css.css}" href="../static/css/css.css" />
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css" />
 </head>
 <body>
 
-    <h1>Hei, <span th:text="|${first_name}|"></span>! Du arbeider i <span th:text="|${work_name}|"></span>!</h1>
-    <form th:action="@{/home}" >
-        <button class ="smallBtn" type="submit">Gå til startside</button>
-    </form>
+<style>
+    .background-image {
+        background-image: url('../img/new_york_skyline.png');
+    }
+</style>
 
+    <div class="App" >
+
+        <section class="main_background">
+            <div class="background-image"></div>
+
+                <img class="work_logo" th:src="@{'data:image/jpeg;base64,'+${workplace_logo}}" >
+
+                <div class="w3-container-workpage">
+
+                    <h1>Hei <span th:text="|${first_name}|"></span>, velkommen til din arbeidsplass!</h1>
+                    <form th:action = "@{'http://'+${work_url}+'.no'}">
+                        <button class ="w3-btn-work w3-black" onclick="" type="submit">Til <span th:text="|${work_name}|"></span></button>
+                    </form>
+                    <form th:action="@{/home}" >
+                        <button class ="w3-btn-work w3-black" type="submit">Til Startside</button>
+                    </form>
+
+                </div>
+        </section>
+    </div>
 
 </body>
 </html>

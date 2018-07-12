@@ -24,7 +24,7 @@ public class Workplace {
     @Id
     private long orgNum;
 
-    //Organization number for organization
+    //Organization name for organization
     @NotBlank
     @Size(min = 3, max = 30)
     private String orgName;
