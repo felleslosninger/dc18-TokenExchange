@@ -7,9 +7,9 @@
 </head>
 <body>
 
-<style>
+<style th:inline="text">
     .background-image {
-        background-image: url('../img/new_york_skyline.png');
+        background: url{[[@{'data:image/jpeg;base64,'+${workplace_background}}]]};
     }
 </style>
 

@@ -36,13 +36,13 @@ public class GetWorkplaceResources {
 
 
     //Sends request to resource server in order to
-    public BufferedImage getWorkplaceLogo(int orgNum) throws IOException {
+    public BufferedImage getWorkplaceImages(int orgNum, String type) throws IOException {
         String auth = makeAuthorization(username, password);
 
         String orgNumString = String.valueOf(orgNum);
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost post = new HttpPost(url + "/workplace/logo");
+        HttpPost post = new HttpPost(url + "/workplace/" + type);
 
         post.setHeader(new BasicHeader("Authorization", "Basic "+auth));
         post.setHeader(new BasicHeader("Content-type", "application/json"));

@@ -47,16 +47,22 @@ public class HomeController implements WebMvcConfigurer {
         String first_name = opid.getFirstName();
         String workUrl = work_name.replace(" ", "");
 
-        //Gets image from resource server and converts it to bytes and encodes it with Base64
-        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
-        byte[] bytesImage = getWorkplaceResources.getImageAsBytes(workplace_logo);
-        String stringBase64Image = Base64.getEncoder().encodeToString(bytesImage);
+        //Gets logo from resource server and converts it to bytes and encodes it with Base64
+        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceImages(opid.getWorkplaceNum(), "logo");
+        byte[] bytesLogo = getWorkplaceResources.getImageAsBytes(workplace_logo);
+        String stringBase64Logo = Base64.getEncoder().encodeToString(bytesLogo);
+
+        //Gets background from resource server and converts it to bytes and encodes it with Base64
+        BufferedImage workplace_background = getWorkplaceResources.getWorkplaceImages(opid.getWorkplaceNum(), "background");
+        byte[] bytesBackground = getWorkplaceResources.getImageAsBytes(workplace_background);
+        String stringBase64Background = Base64.getEncoder().encodeToString(bytesBackground);
 
         //getWorkplaceResources.saveImageWithBytes("../../../resources/static/img/logo.png", workplace_logo);
 
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);
-        model.addAttribute("workplace_logo", stringBase64Image);
+        model.addAttribute("workplace_logo", stringBase64Logo);
+        model.addAttribute("workplace_background", stringBase64Background);
         model.addAttribute("work_url", workUrl);
 
         return "workplace";
