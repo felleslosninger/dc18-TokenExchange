@@ -41,7 +41,7 @@ public class WorkplaceController {
         return workplaceService.createWorkplace(workplaceDAO);
     }
 
-    @PutMapping("/workplace/{orgNum}")
+    @PutMapping("/workplace")
     public Workplace updateWorkplace(@Valid @RequestBody WorkplaceDAO workplaceDAO){
         return workplaceService.updateWorkplace(workplaceDAO);
     }
