@@ -60,7 +60,7 @@ public class TokenGenerator {
         Base64 base64Url = new Base64(true);
 
         header.replace("kid", kid);
-        header.replace("iss", iss);
+        body.replace("iss", iss);
         body.put("wrk_name", workplaceName);
         body.put("wrk_num", workplaceNum);
         body.put("f_name", firstName);

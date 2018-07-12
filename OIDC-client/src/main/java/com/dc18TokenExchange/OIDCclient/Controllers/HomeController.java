@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,17 +29,14 @@ public class HomeController implements WebMvcConfigurer {
     @GetMapping(value = {"/", "/home"})
     public String getHome(final Model model){
 
-        if((SecurityContextHolder.getContext().getAuthentication() != null) && !(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString().equals("ROLE_ANONYMOUS"))){
+        if((SecurityContextHolder.getContext().getAuthentication() != null) && !(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString().equals("ROLE_ANONYMOUS"))) {
             OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             String first_name = opid.getFirstName();
             model.addAttribute("first_name", first_name);
+        }
+        return "home";
 
-            return "home";
-        }
-        else{
-            return "home";
-        }
     }
 
     @GetMapping("/workplace")
@@ -47,6 +45,7 @@ public class HomeController implements WebMvcConfigurer {
 
         String work_name = opid.getWorkplaceName();
         String first_name = opid.getFirstName();
+        String workUrl = work_name.replace(" ", "");
 
         //Gets image from resource server and converts it to bytes and encodes it with Base64
         BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
@@ -58,14 +57,9 @@ public class HomeController implements WebMvcConfigurer {
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);
         model.addAttribute("workplace_logo", stringBase64Image);
+        model.addAttribute("work_url", workUrl);
 
         return "workplace";
-    }
-
-    @GetMapping("/workplace/logo")
-    public BufferedImage getWorkplaceImage() throws IOException{
-        OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return getWorkplaceResources.getWorkplaceLogo(opid.getWorkplaceNum());
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {

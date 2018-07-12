@@ -34,15 +34,18 @@ public class TokenValidation {
         }
     }
 
-    public boolean verifyForCookie(Cookie cookie, String url){
+    public Jwt verifyForCookie(Cookie cookie, String url){
         String at = cookie.getValue();
         try {
             String kid = JwtHelper.headers(at).get("kid");
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(at, verifier(kid, url));
+
+            if(tokenDecoded != null){
+                return tokenDecoded;
+            }
         } catch (Exception e) {
             //ignore
-            return false;
         }
-        return true;
+        return null;
     }
 }
