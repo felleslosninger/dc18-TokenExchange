@@ -22,7 +22,7 @@
 
                 <div class="w3-container-workpage">
 
-                    <h1>Hei <span th:text="|${first_name}|"></span>, du arbeider i <span th:text="|${work_name}|"></span>!</h1>
+                    <h1>Hei <span th:text="|${first_name}|"></span>, velkommen til din arbeidsplass!</h1>
                     <form th:action = "@{'http://'+${work_url}+'.no'}">
                         <button class ="w3-btn-work w3-black" onclick="" type="submit">Til <span th:text="|${work_name}|"></span></button>
                     </form>
