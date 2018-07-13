@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Map;
 
 
 @Controller
@@ -39,12 +40,17 @@ public class HomeController implements WebMvcConfigurer {
     @GetMapping("/workplace")
     public String getWorkplace(final Model model) throws IOException {
         OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         int tempOrgNum = opid.getWorkplaceNum();
 
+        //Gets local variables for use in workplace-template
         String work_name = opid.getWorkplaceName();
         String first_name = opid.getFirstName();
         String workUrl = getWorkplaceResources.getHomeUrl(tempOrgNum);
+
+        //Gets theme from resource server and separates it into two hex-color values
+        Map<String, String> theme = getWorkplaceResources.getTheme(tempOrgNum);
+        String pri_col = theme.get("pri_col");
+        String sec_col = theme.get("sec_col");
 
         //Gets logo from resource server and converts it to bytes and encodes it with Base64
         BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceImages(tempOrgNum, "logo");
@@ -56,13 +62,14 @@ public class HomeController implements WebMvcConfigurer {
         byte[] bytesBackground = getWorkplaceResources.getImageAsBytes(workplace_background);
         String stringBase64Background = Base64.getEncoder().encodeToString(bytesBackground);
 
-        //getWorkplaceResources.saveImageWithBytes("../../../resources/static/img/logo.png", workplace_logo);
-
+        //Inserts all values into template
         model.addAttribute("work_name", work_name);
         model.addAttribute("first_name", first_name);
+        model.addAttribute("work_url", workUrl);
+        model.addAttribute("pri_col", pri_col);
+        model.addAttribute("sec_col", sec_col);
         model.addAttribute("workplace_logo", stringBase64Logo);
         model.addAttribute("workplace_background", stringBase64Background);
-        model.addAttribute("work_url", workUrl);
 
         return "workplace";
     }

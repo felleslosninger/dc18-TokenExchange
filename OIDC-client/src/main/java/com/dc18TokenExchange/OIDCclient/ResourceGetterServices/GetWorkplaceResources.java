@@ -1,6 +1,7 @@
 package com.dc18TokenExchange.OIDCclient.ResourceGetterServices;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -23,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GetWorkplaceResources {
@@ -40,7 +42,6 @@ public class GetWorkplaceResources {
     //Sends request to resource server in order to
     public BufferedImage getWorkplaceImages(int orgNum, String type) throws IOException {
         String auth = makeAuthorization(username, password);
-
         String orgNumString = String.valueOf(orgNum);
 
         CloseableHttpClient client = HttpClients.createDefault();
@@ -65,6 +66,7 @@ public class GetWorkplaceResources {
         //return logoBytes;
     }
 
+    //Returns the specified organization's home page
     public String getHomeUrl(int orgNum) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet get = new HttpGet(url + "/workplace/" + orgNum + "/homepage");
@@ -73,10 +75,27 @@ public class GetWorkplaceResources {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         String url = rd.readLine();
-        
+
         client.close();
 
         return url;
+    }
+
+    //Gets color profile from the specified organization
+    public Map<String, String> getTheme(int orgNum) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url + "/workplace/" + orgNum + "/theme");
+
+        HttpResponse response = client.execute(get);
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        String themeMapString = rd.readLine();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> themeMap = objectMapper.readValue(themeMapString, Map.class);
+
+        client.close();
+
+        return themeMap;
     }
 
     //Creates authorizaion header for resource server authorization
