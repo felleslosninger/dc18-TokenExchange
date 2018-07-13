@@ -9,7 +9,7 @@ Målet for prosjektet var å imøtekomme spesifikasjonen fra oppgaven og finne o
 
 ### Hovedoppgave: Nett-tjeneste fra etat A har behov for å vite hvilken etat B brukeren kommer fra
 1.  Teneste A er en OIDC-klient
-2.  Bruker gjennomfører autentisering gjennom ID-porten og mottar standard id_token
+2.  Bruker gjennomfører autentisering gjennom ID-porten og mottar standard id-token og aksess-token.
 3.  A bytter aksess-tokenet inn i en tokenutvekslingstjeneste (STS) og får tilbake et nytt token som har blitt beriket fra autorativ kilde med org.no tilhøyrande arbeidsgiver
 4.  Tjeneste A sjekker at beriket token inneholder org.no til lokalt godkjent virksomhet
  
@@ -45,7 +45,11 @@ Endepunktene er
 * STS-serveren 
 * Ressurs-serveren
 
-I browseren bruker man kun localhost:OIDCport, der OIDCport er portnummeret brukt på OIDC-endepuntktet.
+For å brukeprogram bruker man OIDC-endepunktet sitt portnummer (oidc-port).
+```
+http://localhost:oidc-port
+```
+
 
 ### Forhåndskrav
 
@@ -54,14 +58,16 @@ Hva du trenger og hvordan du kan sette opp systemet.
 ```
 Maven 3.5.3
 Java SE Development Kit 8
-PostgreSQL, eller andre Hibernatekompatible databasesystemer
+PostgreSQL, eller andre Hibernate-kompatible databasesystemer
 ```
+
+I denne vil det også være nødvendig med testbrukere og sertifikat godkjent av ID-porten.
 
 ### Installering
 
-Slik setter du opp installasjonen av alt nødvendig i prosjektet.
+Installasjonen av alt nødvendig i prosjektet.
 
-For å kjøre postgresdatabasene der filepath er lokasjonen til databasen skriver man som følger
+For å kjøre postgresdatabasene der filepath er lokasjonen til databasen:
 ```
 postgres -D C:\filepath
 ```
@@ -80,7 +86,9 @@ Mer info kommer.
 
 ## Deltakende medlemmer
 
-Utviklingen består av medlemmer fra DifiCamp 2018. Se listen over [contributors](https://github.com/difi/dc18-TokenExchange/edit/master/) som deltok på dette prosjektet.
+Utviklingen består av medlemmer fra DifiCamp 2018. Se listen over [contributors](https://github.com/difi/dc18-TokenExchange/graphs/contributors) som deltok på dette prosjektet.
+
+
 
 ## Takk til
 
