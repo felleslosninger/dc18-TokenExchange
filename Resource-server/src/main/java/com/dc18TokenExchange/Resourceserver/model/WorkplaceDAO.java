@@ -28,7 +28,12 @@ public class WorkplaceDAO{
     private String sec_col;
 
     //Absolute path for image file, used to for POST-mapping entries to database. Should be improved.
-    private String path;
+    private String logo_path;
+
+    //Absolute path for image file, used to for POST-mapping entries to database. Should be improved.
+    private String background_path;
+
+    private String home_url;
 
 
     public long getOrgNum() {
@@ -63,11 +68,27 @@ public class WorkplaceDAO{
         this.sec_col = sec_col;
     }
 
-    public String getPath() {
-        return path;
+    public String getLogo_path() {
+        return logo_path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setLogo_path(String logo_path) {
+        this.logo_path = logo_path;
+    }
+
+    public String getBackground_path() {
+        return background_path;
+    }
+
+    public void setBackground_path(String background_path) {
+        this.background_path = background_path;
+    }
+
+    public String getHome_url() {
+        return home_url;
+    }
+
+    public void setHome_url(String home_url) {
+        this.home_url = home_url;
     }
 }
