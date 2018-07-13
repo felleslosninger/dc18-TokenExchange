@@ -35,7 +35,6 @@ public class HomeControllerTest {
 
         Properties exceptionMappings = new Properties();
 
-        exceptionMappings.put("net.petrikainulainen.spring.testmvc.todo.exception.TodoNotFoundException", "error/404");
         exceptionMappings.put("java.lang.Exception", "error/error");
         exceptionMappings.put("java.lang.RuntimeException", "error/error");
 
@@ -50,15 +49,7 @@ public class HomeControllerTest {
 
         return exceptionResolver;
     }
-
-    private MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-
-        messageSource.setBasename("i18n/messages");
-        messageSource.setUseCodeAsDefaultMessage(true);
-
-        return messageSource;
-    }
+    
 
     private LocalValidatorFactoryBean validator() {
         return new LocalValidatorFactoryBean();
