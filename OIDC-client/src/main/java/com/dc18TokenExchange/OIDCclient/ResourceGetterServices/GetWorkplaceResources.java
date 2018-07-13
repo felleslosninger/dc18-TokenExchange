@@ -4,6 +4,8 @@ package com.dc18TokenExchange.OIDCclient.ResourceGetterServices;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -61,6 +63,20 @@ public class GetWorkplaceResources {
 
         //saveImageWithBytes("C:\\temp\\newImage.png", bi);
         //return logoBytes;
+    }
+
+    public String getHomeUrl(int orgNum) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url + "/workplace/" + orgNum + "/homepage");
+
+        HttpResponse response = client.execute(get);
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        String url = rd.readLine();
+        
+        client.close();
+
+        return url;
     }
 
     //Creates authorizaion header for resource server authorization

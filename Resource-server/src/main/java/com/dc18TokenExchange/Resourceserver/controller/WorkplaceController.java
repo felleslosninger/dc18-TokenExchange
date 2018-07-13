@@ -83,7 +83,7 @@ public class WorkplaceController {
     @GetMapping("/workplace/{orgNum}/homepage")
     public String getHomeUrl(@PathVariable String orgNum){
 
-        Long orgNumLong = stringRequestParser.getLongValueFromString(orgNum, "orgNum=");
+        Long orgNumLong = Long.parseLong(orgNum);
 
         return workplaceService.getHomeUrl(orgNumLong);
     }

@@ -3,14 +3,11 @@ package com.dc18TokenExchange.OIDCclient.Controllers;
 
 import com.dc18TokenExchange.OIDCclient.OpenIdConnectUserDetails;
 import com.dc18TokenExchange.OIDCclient.ResourceGetterServices.GetWorkplaceResources;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -43,17 +40,19 @@ public class HomeController implements WebMvcConfigurer {
     public String getWorkplace(final Model model) throws IOException {
         OpenIdConnectUserDetails opid = (OpenIdConnectUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        int tempOrgNum = opid.getWorkplaceNum();
+
         String work_name = opid.getWorkplaceName();
         String first_name = opid.getFirstName();
-        String workUrl = work_name.replace(" ", "");
+        String workUrl = getWorkplaceResources.getHomeUrl(tempOrgNum);
 
         //Gets logo from resource server and converts it to bytes and encodes it with Base64
-        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceImages(opid.getWorkplaceNum(), "logo");
+        BufferedImage workplace_logo = getWorkplaceResources.getWorkplaceImages(tempOrgNum, "logo");
         byte[] bytesLogo = getWorkplaceResources.getImageAsBytes(workplace_logo);
         String stringBase64Logo = Base64.getEncoder().encodeToString(bytesLogo);
 
         //Gets background from resource server and converts it to bytes and encodes it with Base64
-        BufferedImage workplace_background = getWorkplaceResources.getWorkplaceImages(opid.getWorkplaceNum(), "background");
+        BufferedImage workplace_background = getWorkplaceResources.getWorkplaceImages(tempOrgNum, "background");
         byte[] bytesBackground = getWorkplaceResources.getImageAsBytes(workplace_background);
         String stringBase64Background = Base64.getEncoder().encodeToString(bytesBackground);
 

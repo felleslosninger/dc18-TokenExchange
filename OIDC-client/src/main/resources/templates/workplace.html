@@ -7,27 +7,23 @@
 </head>
 <body>
 
-<style th:inline="text">
-    .background-image {
-        background: url{[[@{'data:image/jpeg;base64,'+${workplace_background}}]]};
-    }
-</style>
+
 
     <div class="App" >
 
         <section class="main_background">
-            <div class="background-image"></div>
+            <div th:style="@{'background: url(data:image/jpeg;base64,' + ${workplace_background} + '); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; z-index: -1;'}"></div>
 
                 <img class="work_logo" th:src="@{'data:image/jpeg;base64,'+${workplace_logo}}" >
 
                 <div class="w3-container-workpage">
 
                     <h1>Hei <span th:text="|${first_name}|"></span>, velkommen til din arbeidsplass!</h1>
-                    <form th:action = "@{'http://'+${work_url}+'.no'}">
+                    <form th:action = "@{${work_url}}">
                         <button class ="w3-btn-work w3-black" onclick="" type="submit">Til <span th:text="|${work_name}|"></span></button>
                     </form>
                     <form th:action="@{/home}" >
-                        <button class ="w3-btn-work w3-black" type="submit">Til Startside</button>
+                        <button class ="w3-btn-work w3-black" type="submit">Til startside</button>
                     </form>
 
                 </div>
