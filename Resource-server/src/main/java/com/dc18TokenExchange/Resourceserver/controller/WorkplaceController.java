@@ -1,5 +1,6 @@
 package com.dc18TokenExchange.Resourceserver.controller;
 
+import com.dc18TokenExchange.Resourceserver.StringRequestParser;
 import com.dc18TokenExchange.Resourceserver.model.Workplace;
 import com.dc18TokenExchange.Resourceserver.model.WorkplaceDAO;
 import com.dc18TokenExchange.Resourceserver.service.WorkplaceService;
@@ -21,6 +22,9 @@ public class WorkplaceController {
     @Autowired
     private WorkplaceService workplaceService;
 
+    @Autowired
+    private StringRequestParser stringRequestParser;
+
 
     @GetMapping("/workplace")
     public Page<Workplace> getWorkplaces(Pageable pageable){
@@ -37,7 +41,7 @@ public class WorkplaceController {
         return workplaceService.createWorkplace(workplaceDAO);
     }
 
-    @PutMapping("/workplace/{orgNum}")
+    @PutMapping("/workplace")
     public Workplace updateWorkplace(@Valid @RequestBody WorkplaceDAO workplaceDAO){
         return workplaceService.updateWorkplace(workplaceDAO);
     }
@@ -47,25 +51,40 @@ public class WorkplaceController {
         return workplaceService.deleteWorkplace(orgNum);
     }
 
+
+    //Returns the colors specified as a map, i.e. a theme the organization can use
+    @GetMapping("/workplace/{orgNum}/theme")
+    public HttpEntity<Map> getTheme(@PathVariable String orgNum){
+
+        Long orgNumLong = Long.parseLong(orgNum);
+
+        return workplaceService.getTheme(orgNumLong);
+    }
+
     //Returns the logo for the specific company
     @PostMapping("/workplace/logo")
     public HttpEntity<byte[]> getImage(@Valid @RequestBody String orgNum){
 
-        String orgNumSubstring = "orgNum=";
-        orgNum = orgNum.substring(orgNumSubstring.length());
-        Long orgNumLong = Long.parseLong(orgNum);
+        Long orgNumLong = stringRequestParser.getLongValueFromString(orgNum, "orgNum=");
 
         return workplaceService.getLogo(orgNumLong);
     }
 
-    //Returns the colors specified as a map, i.e. a theme the organization can use
-    @PostMapping("/workplace/theme")
-    public HttpEntity<Map> getTheme(@Valid @RequestBody String orgNum){
+    //Returns the logo for the specific company
+    @PostMapping("/workplace/background")
+    public HttpEntity<byte[]> getBackground(@Valid @RequestBody String orgNum){
 
-        String orgNumSubstring = "orgNum=";
-        orgNum = orgNum.substring(orgNumSubstring.length());
+        Long orgNumLong = stringRequestParser.getLongValueFromString(orgNum, "orgNum=");
+
+        return workplaceService.getBackground(orgNumLong);
+    }
+
+    //Returns the main url for the home page of the specific company
+    @GetMapping("/workplace/{orgNum}/homepage")
+    public String getHomeUrl(@PathVariable String orgNum){
+
         Long orgNumLong = Long.parseLong(orgNum);
 
-        return workplaceService.getTheme(orgNumLong);
+        return workplaceService.getHomeUrl(orgNumLong);
     }
 }
