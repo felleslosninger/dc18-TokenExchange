@@ -1,42 +1,32 @@
 package com.dc18TokenExchange.Resourceserver.model;
 
-
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "workplace_info_table")
-public class Workplace /*extends AuditModel */{ //Auditmodel won't work for some reason, server claims all params are null when creating entity
-
+public class Workplace /*extends AuditModel */ { //Auditmodel won't work for some reason, server claims all params are null when creating entity
     //Organization number for organization (Brønnøysund)
     @Id
     private long orgNum;
-
     //Organization name for organization
     @NotBlank
     @Size(min = 3, max = 30)
     private String orgName;
-
     //HEX for primary color
     @NotBlank
     private String pri_col;
-
     //HEX for secondary color
     @NotBlank
     private String sec_col;
-
     //Bytes for image logo
     //@Lob
-    @Column(name="WORKPLACE_IMAGE", nullable=true, columnDefinition="bytea")
+    @Column(name = "WORKPLACE_IMAGE", nullable = true, columnDefinition = "bytea")
     private byte[] logo_img;
-
     //Bytes for image background
-    @Column(name="WORKPLACE_BACKGROUND_IMAGE", nullable=true, columnDefinition="bytea")
+    @Column(name = "WORKPLACE_BACKGROUND_IMAGE", nullable = true, columnDefinition = "bytea")
     private byte[] background_img;
-
     private String home_url;
-
 
     //Getters and setters
     public long getOrgNum() {

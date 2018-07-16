@@ -1,41 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:url="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Workplace</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css" />
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
 </head>
 <body>
-
-
-
-    <div class="App" >
-
-        <section class="main_background">
-            <div th:style="@{'background: url(data:image/jpeg;base64,' + ${workplace_background} + '); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; z-index: -1;'}"></div>
-
-                <img class="work_logo" th:src="@{'data:image/jpeg;base64,'+${workplace_logo}}" >
-
-                <div class="w3-container-workpage">
-
-                    <h1>Hei <span th:text="|${first_name}|"></span>, velkommen til din arbeidsplass!</h1>
-                    <form th:action = "@{${work_url}}">
-                        <button class ="w3-btn-work w3-black" onclick="" type="submit">Til <span th:text="|${work_name}|"></span></button>
-                    </form>
-                    <form th:action="@{/home}" >
-                        <button class ="w3-btn-work w3-black" type="submit">Til startside</button>
-                    </form>
-
-                </div>
-
-                <div id="bottom_design">
-
-                    <div th:style="@{'position: absolute; width: 0; height: 0; bottom: 0; border-bottom: 100px solid ' + ${sec_col} + '; border-right: 1046px solid transparent;'}"></div>
-                    <div th:style="@{'position: absolute; width: 0; height: 0; right: 0; bottom: 0; border-bottom: 150px solid ' + ${pri_col} + '; border-left: 1500px solid transparent;'}"></div>
-
-                </div>
-        </section>
-    </div>
-
+<div class="App">
+    <section class="main_background">
+        <div th:style="@{'background: url(data:image/jpeg;base64,' + ${workplace_background} + '); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; z-index: -1;'}"></div>
+        <img class="work_logo" th:src="@{'data:image/jpeg;base64,'+${workplace_logo}}" src="">
+        <div class="w3-container-workpage">
+            <h1>Hei <span th:text="|${first_name}|"></span>, velkommen til din arbeidsplass!</h1>
+            <form th:action="@{${work_url}}">
+                <button class="w3-btn-work w3-black" onclick="" type="submit">Til <span th:text="|${work_name}|"></span>
+                </button>
+            </form>
+            <form th:action="@{/home}">
+                <button class="w3-btn-work w3-black" type="submit">Til startside</button>
+            </form>
+        </div>
+        <div id="bottom_design">
+            <div th:style="@{'position: absolute; width: 0; height: 0; bottom: 0; border-bottom: 100px solid ' + ${sec_col} + '; border-right: 1046px solid transparent;'}"></div>
+            <div th:style="@{'position: absolute; width: 0; height: 0; right: 0; bottom: 0; border-bottom: 150px solid ' + ${pri_col} + '; border-left: 1500px solid transparent;'}"></div>
+        </div>
+    </section>
+</div>
 </body>
 </html>

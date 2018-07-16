@@ -4,11 +4,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 public class OpenIdConnectUserDetails implements UserDetails {
@@ -18,54 +16,44 @@ public class OpenIdConnectUserDetails implements UserDetails {
     private String lastName;
     private String workplaceName;
     private int workplaceNum;
+    private String at;
+    private UsernamePasswordAuthenticationToken upa_token;
 
-    public String at;
-    public UsernamePasswordAuthenticationToken upa_token;
-
-    public OpenIdConnectUserDetails(Map<String, Object> userInfo) {
+    OpenIdConnectUserDetails(Map<String, Object> userInfo) {
         this.userId = userInfo.get("pid").toString();
-
-
-        if(userInfo.containsKey("wrk_num")){
+        if (userInfo.containsKey("wrk_num")) {
             this.workplaceNum = (int) userInfo.get("wrk_num");
-        }
-        else{
+        } else {
             throw new IllegalStateException("No orgNum in token");
         }
-        if(userInfo.containsKey("wrk_name")){
+        if (userInfo.containsKey("wrk_name")) {
             this.workplaceName = userInfo.get("wrk_name").toString();
-        }
-        else{
+        } else {
             throw new IllegalStateException("No orgName in token");
         }
-
-
-        if(userInfo.containsKey("f_name")){
+        if (userInfo.containsKey("f_name")) {
             this.firstName = userInfo.get("f_name").toString();
-        }
-        else{
+        } else {
             throw new IllegalStateException("No first name in token");
         }
-        if(userInfo.containsKey("l_name")){
+        if (userInfo.containsKey("l_name")) {
             this.lastName = userInfo.get("l_name").toString();
-        }
-        else{
+        } else {
             throw new IllegalStateException("No last name in token");
         }
     }
 
-    public void set_upa_token(UsernamePasswordAuthenticationToken upa_token){
-        this.upa_token = upa_token;
-    }
-
-    public UsernamePasswordAuthenticationToken get_upa_token(){
+    UsernamePasswordAuthenticationToken get_upa_token() {
         return upa_token;
     }
 
+    void set_upa_token(UsernamePasswordAuthenticationToken upa_token) {
+        this.upa_token = upa_token;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(("ROLE_USER")));
+        return Collections.singletonList(new SimpleGrantedAuthority(("ROLE_USER")));
     }
 
     @Override
@@ -98,11 +86,11 @@ public class OpenIdConnectUserDetails implements UserDetails {
         return true;
     }
 
-    public String getAT(){
+    public String getAT() {
         return at;
     }
 
-    public void setAT(String at){
+    public void setAT(String at) {
         this.at = at;
     }
 

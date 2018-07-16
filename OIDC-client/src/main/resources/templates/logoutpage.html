@@ -1,34 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Logout</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../static/css/main.css">
+    <style>
+        .background-image {
+            background-image: url('../static/img/bg.jpg');
+        }
+    </style>
 </head>
 <body>
-
-<style>
-    .background-image {
-        background-image: url('../img/bg.jpg');
-    }
-</style>
-
-
-<div class="App" >
+<div class="App">
     <header class="App-header">
-        <img  th:src="@{/img/difiLogo2.png}" src="../static/img/difiLogo2.png" class ="App-logo" alt = "logo"/>
+        <img th:src="@{/img/difiLogo2.png}" src="../static/img/difiLogo2.png" class="App-logo" alt="logo"/>
     </header>
     <section class="main_background">
         <div class="background-image"></div>
-        <div id ="loginBox" >
+        <div id="loginBox">
             <div class="w3-container">
-                <h1 id = "welcome">Du er nå logget ut.</h1>
-                <form th:action="@{/home}" >
-                    <button class ="w3-btn w3-black" type="submit">Til startside</button>
+                <h1 id="welcome">Du er nå logget ut.</h1>
+                <form th:action="@{/home}">
+                    <button class="w3-btn w3-black" type="submit">Til startside</button>
                 </form>
             </div>
         </div>
     </section>
 </div>
-
 </body>
 </html>

@@ -19,18 +19,19 @@ import java.util.Arrays;
 public class IdpOpenIdConnectConfig {
     @Value("${idp.clientId}")
     private String clientId;
-
     @Value("${idp.clientSecret}")
     private String clientSecret;
-
     @Value("${idp.accessTokenUri}")
     private String accessTokenUri;
-
     @Value("${idp.userAuthorizationUri}")
     private String userAuthorizationUri;
-
     @Value("${idp.redirectUri}")
     private String redirectUri;
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public OAuth2ProtectedResourceDetails googleOpenId() {
@@ -48,10 +49,5 @@ public class IdpOpenIdConnectConfig {
     @Bean
     public OAuth2RestTemplate googleOpenIdTemplate(OAuth2ClientContext clientContext) {
         return new OAuth2RestTemplate(googleOpenId(), clientContext);
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
-        return new PropertySourcesPlaceholderConfigurer();
     }
 }

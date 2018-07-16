@@ -24,36 +24,30 @@ import java.util.Map;
 
 @Service
 public class STSReciever {
-
-    @Autowired
+    private final
     TokenValidation tokenValidation;
-
     private String newToken;
 
+    @Autowired
+    public STSReciever(TokenValidation tokenValidation) {
+        this.tokenValidation = tokenValidation;
+    }
+
     //Sends POST to STS, requests new token
-    public Map<String, Object> sendPostToSts(String accessToken, String auth, String sts_url, String sts_jwks) throws IOException {
+    Map sendPostToSts(String accessToken, String auth, String sts_url, String sts_jwks) throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(sts_url);
-
-        post.setHeader(new BasicHeader("Authorization", "Basic "+auth));
+        post.setHeader(new BasicHeader("Authorization", "Basic " + auth));
         post.setHeader(new BasicHeader("Content-type", "application/x-www-form-urlencoded"));
-
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("access_token",accessToken));
-
+        urlParameters.add(new BasicNameValuePair("access_token", accessToken));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
         HttpResponse response = client.execute(post);
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-        Map<String,String> map;
         String newToken = rd.readLine();
         this.newToken = newToken;
-
         client.close();
-
         String kid = JwtHelper.headers(newToken).get("kid");
-
         try {
             Jwt tokenDecoded = JwtHelper.decodeAndVerify(newToken, tokenValidation.verifier(kid, sts_jwks));
             return new ObjectMapper()
@@ -65,13 +59,13 @@ public class STSReciever {
     }
 
     //Authorizes for STS connection
-    public String getAuthorization(String sts_username, String sts_password){
-        String clientAuth = sts_username+":"+sts_password;
+    String getAuthorization(String sts_username, String sts_password) {
+        String clientAuth = sts_username + ":" + sts_password;
         byte[] clientAuthEncoded = Base64.encodeBase64(clientAuth.getBytes());
         return new String(clientAuthEncoded);
     }
 
-    public String getNewToken(){
+    String getNewToken() {
         return this.newToken;
     }
 }

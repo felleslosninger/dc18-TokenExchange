@@ -1,6 +1,5 @@
 package com.dc18TokenExchange.STSserver.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,7 +11,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "user_info_table")
 public class UserInfo extends AuditModel {
-
     //Generates ID for every user
     /*@Id
     @GeneratedValue(generator = "user_generator")
@@ -22,7 +20,6 @@ public class UserInfo extends AuditModel {
             initialValue = 1000
     )
     private Long id;*/
-
     //ID for user
     @Id
     private long userId;
@@ -39,11 +36,10 @@ public class UserInfo extends AuditModel {
 
     //Sets user affiliation to established organization (can be NULL)
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "orgNum", nullable = true)
+    @JoinColumn(name = "orgNum")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JsonIgnore
     private Workplace worksFor;
-
 
     //Getters and setters
     public long getUserId() {

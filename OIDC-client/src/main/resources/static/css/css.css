@@ -1,28 +1,28 @@
-html{
+html {
     margin: 0;
     padding: 0;
     height: 100%;
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
     height: 60%;
     background-color: #EDF0F3;
-    font-family: Open Sans,sans-serif;
+    font-family: Open Sans, sans-serif;
     display: flex;
     justify-content: center;
     flex-direction: row;
 }
 
-.container{
+.container {
     display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
 }
 
-.contentContainer{
+.contentContainer {
     display: flex;
     justify-content: center;
     align-content: center;
@@ -33,7 +33,7 @@ body{
     -webkit-border-radius: 9px;
     -moz-border-radius: 9px;
     border-radius: 9px;
-    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif, serif;
     color: #ffffff;
     font-size: 41px;
     padding: 29px;
@@ -42,28 +42,27 @@ body{
     width: 100%;
 }
 
-#workplace_logo{
+#workplace_logo {
     width: 60%;
     height: 60%;
 }
 
-.logoContainer{
+.logoContainer {
     display: flex;
     justify-content: center;
     align-content: center;
 }
 
-a{
+a {
     display: flex;
     justify-content: center;
 }
-
 
 .smallBtn {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif, serif;
     color: #ffffff;
     font-size: 13px;
     padding: 9px;
@@ -82,7 +81,7 @@ a{
     text-decoration: none;
 }
 
-h1{
-    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+h1 {
+    font-family: "Whitney Cond A", "Whitney Cond B", "Lato", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif, serif;
     font-size: 100px;
 }

@@ -8,33 +8,25 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "workplace_info_tableDAO")
-public class WorkplaceDAO{
-
+public class WorkplaceDAO {
     //Organization number for organization (Brønnøysund)
     @Id
     private long orgNum;
-
     //Organization name for organization
     @NotBlank
     @Size(min = 3, max = 30)
     private String orgName;
-
     //HEX for primary color
     @NotBlank
     private String pri_col;
-
     //HEX for secondary color
     @NotBlank
     private String sec_col;
-
     //Absolute path for image file, used to for POST-mapping entries to database. Should be improved.
     private String logo_path;
-
     //Absolute path for image file, used to for POST-mapping entries to database. Should be improved.
     private String background_path;
-
     private String home_url;
-
 
     public long getOrgNum() {
         return orgNum;

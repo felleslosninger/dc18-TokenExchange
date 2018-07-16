@@ -1,6 +1,5 @@
 package com.dc18TokenExchange.STSserver.service;
 
-
 import com.dc18TokenExchange.STSserver.exception.ResourceNotFoundException;
 import com.dc18TokenExchange.STSserver.model.Workplace;
 import com.dc18TokenExchange.STSserver.repository.UserInfoRepository;
@@ -15,32 +14,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WorkplaceService {
+    private final WorkplaceRepository workplaceRepository;
+    private final UserInfoRepository userInfoRepository;
 
     @Autowired
-    private WorkplaceRepository workplaceRepository;
-
-    @Autowired
-    private UserInfoRepository userInfoRepository;
-
+    public WorkplaceService(WorkplaceRepository workplaceRepository, UserInfoRepository userInfoRepository) {
+        this.workplaceRepository = workplaceRepository;
+        this.userInfoRepository = userInfoRepository;
+    }
 
     //Gets all workplaces
-    public Page<Workplace> getWorkplaces(Pageable pageable){
+    public Page<Workplace> getWorkplaces(Pageable pageable) {
         return workplaceRepository.findAll(pageable);
     }
 
     //Gets a single user based on userId
-    public Workplace getDistinctByOrgNum(Long userId){
+    public Workplace getDistinctByOrgNum(Long userId) {
         return workplaceRepository.findDistinctByOrgNum(userId);
     }
 
     //Creates new workplace
-    public Workplace createWorkplace(Workplace workplace){
+    public Workplace createWorkplace(Workplace workplace) {
         return workplaceRepository.save(workplace);
     }
 
     //Changes workplace row
     public Workplace updateWorkplace(Long orgNum, Workplace workplace) {
-
         return workplaceRepository.findById(orgNum)
                 .map(thisWorkplace -> {
                             thisWorkplace.setOrgName(workplace.getOrgName());
@@ -52,7 +51,6 @@ public class WorkplaceService {
 
     //Deletes workplace row
     public ResponseEntity deleteWorkplace(Long orgNum) {
-
         return workplaceRepository.findById(orgNum)
                 .map(thisWorkplace -> {
                             workplaceRepository.delete(thisWorkplace);
@@ -63,17 +61,17 @@ public class WorkplaceService {
 
 
     //Returns the workplace of a specified user. Used for token generation for the new STS-token returned to the client.
-    public Workplace getDistinctWorkplaceByUserId(Long userId){
+    public Workplace getDistinctWorkplaceByUserId(Long userId) {
         return userInfoRepository.findDistinctByUserId(userId).getWorksFor();
     }
 
     //Returns the workplace name as string of a specified user. Used for token generation for the new STS-token returned to the client.
-    public String getDistinctWorkplaceNameByUserIdAsString(Long userId){
+    String getDistinctWorkplaceNameByUserIdAsString(Long userId) {
         return userInfoRepository.findDistinctByUserId(userId).getWorksFor().getOrgName();
     }
 
     //Returns the workplace number as string of a specified user. Used for token generation for the new STS-token returned to the client.
-    public Long getDistinctWorkplaceNumByUserIdAsString(Long userId){
+    Long getDistinctWorkplaceNumByUserIdAsString(Long userId) {
         return userInfoRepository.findDistinctByUserId(userId).getWorksFor().getOrgNum();
     }
 }

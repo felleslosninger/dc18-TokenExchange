@@ -1,0 +1,114 @@
+{
+  "properties": [
+    {
+      "name": "jwks.kty",
+      "type": "java.lang.String",
+      "description": "Description for jwks.kty."
+    },
+    {
+      "name": "jwks.e",
+      "type": "java.lang.String",
+      "description": "Description for jwks.e."
+    },
+    {
+      "name": "jwks.use",
+      "type": "java.lang.String",
+      "description": "Description for jwks.use."
+    },
+    {
+      "name": "jwks.kid",
+      "type": "java.lang.String",
+      "description": "Description for jwks.kid."
+    },
+    {
+      "name": "jwks.n",
+      "type": "java.lang.String",
+      "description": "Description for jwks.n."
+    },
+    {
+      "name": "jwks.x5c",
+      "type": "java.lang.String",
+      "description": "Description for jwks.x5c."
+    },
+    {
+      "name": "jwks.alg",
+      "type": "java.lang.String",
+      "description": "Description for jwks.alg."
+    },
+    {
+      "name": "jwks.x5t",
+      "type": "java.lang.String",
+      "description": "Description for jwks.x5t."
+    },
+    {
+      "name": "sts.iss",
+      "type": "java.lang.String",
+      "description": "Description for sts.iss."
+    },
+    {
+      "name": "cert.filepath",
+      "type": "java.lang.String",
+      "description": "Description for cert.filepath."
+    },
+    {
+      "name": "cert.password",
+      "type": "java.lang.String",
+      "description": "Description for cert.password."
+    },
+    {
+      "name": "approved.idp.issuer",
+      "type": "java.lang.String",
+      "description": "Description for approved.idp.issuer."
+    },
+    {
+      "name": "approved.idp.jwk",
+      "type": "java.lang.String",
+      "description": "Description for approved.idp.jwk."
+    },
+    {
+      "name": "approved.aud",
+      "type": "java.lang.String",
+      "description": "Description for approved.aud."
+    },
+    {
+      "name": "difi.orgNum",
+      "type": "java.lang.String",
+      "description": "Description for difi.orgNum."
+    },
+    {
+      "name": "difi.orgName",
+      "type": "java.lang.String",
+      "description": "Description for difi.orgName."
+    },
+    {
+      "name": "bouvet.orgNum",
+      "type": "java.lang.String",
+      "description": "Description for bouvet.orgNum."
+    },
+    {
+      "name": "bouvet.orgName",
+      "type": "java.lang.String",
+      "description": "Description for bouvet.orgName."
+    },
+    {
+      "name": "knowit.orgNum",
+      "type": "java.lang.String",
+      "description": "Description for knowit.orgNum."
+    },
+    {
+      "name": "knowit.orgName",
+      "type": "java.lang.String",
+      "description": "Description for knowit.orgName."
+    },
+    {
+      "name": "soprasteria.orgNum",
+      "type": "java.lang.String",
+      "description": "Description for soprasteria.orgNum."
+    },
+    {
+      "name": "soprasteria.orgName",
+      "type": "java.lang.String",
+      "description": "Description for soprasteria.orgName."
+    }
+  ]
+}

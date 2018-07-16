@@ -15,7 +15,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.GET, "/workplace/**");
@@ -25,14 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated()
+                .and()
                 .httpBasic()
-                    .and()
+                .and()
                 .logout()
-                    .permitAll()
-                    .and()
+                .permitAll()
+                .and()
                 .csrf().disable();
     }
 
@@ -40,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers();
     }*/
-
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
@@ -50,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .password("password12345")
                         .roles("USER")
                         .build();
-
         return new InMemoryUserDetailsManager(user);
     }
 }

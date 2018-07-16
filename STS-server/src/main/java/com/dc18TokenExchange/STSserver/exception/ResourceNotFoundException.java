@@ -1,6 +1,5 @@
 package com.dc18TokenExchange.STSserver.exception;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

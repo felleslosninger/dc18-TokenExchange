@@ -1,0 +1,79 @@
+{
+  "properties": [
+    {
+      "name": "idp.clientId",
+      "type": "java.lang.String",
+      "description": "Description for idp.clientId."
+    },
+    {
+      "name": "idp.clientSecret",
+      "type": "java.lang.String",
+      "description": "Description for idp.clientSecret."
+    },
+    {
+      "name": "idp.accessTokenUri",
+      "type": "java.lang.String",
+      "description": "Description for idp.accessTokenUri."
+    },
+    {
+      "name": "idp.userAuthorizationUri",
+      "type": "java.lang.String",
+      "description": "Description for idp.userAuthorizationUri."
+    },
+    {
+      "name": "idp.redirectUri",
+      "type": "java.lang.String",
+      "description": "Description for idp.redirectUri."
+    },
+    {
+      "name": "idp.issuer",
+      "type": "java.lang.String",
+      "description": "Description for idp.issuer."
+    },
+    {
+      "name": "idp.jwkUrl",
+      "type": "java.lang.String",
+      "description": "Description for idp.jwkUrl."
+    },
+    {
+      "name": "sts.username",
+      "type": "java.lang.String",
+      "description": "Description for sts.username."
+    },
+    {
+      "name": "sts.password",
+      "type": "java.lang.String",
+      "description": "Description for sts.password."
+    },
+    {
+      "name": "sts.url",
+      "type": "java.lang.String",
+      "description": "Description for sts.url."
+    },
+    {
+      "name": "sts.jwks",
+      "type": "java.lang.String",
+      "description": "Description for sts.jwks."
+    },
+    {
+      "name": "sts.iss",
+      "type": "java.lang.String",
+      "description": "Description for sts.iss."
+    },
+    {
+      "name": "resource.server.username",
+      "type": "java.lang.String",
+      "description": "Description for resource.server.username."
+    },
+    {
+      "name": "resource.server.password",
+      "type": "java.lang.String",
+      "description": "Description for resource.server.password."
+    },
+    {
+      "name": "resource.server.url",
+      "type": "java.lang.String",
+      "description": "Description for resource.server.url."
+    }
+  ]
+}

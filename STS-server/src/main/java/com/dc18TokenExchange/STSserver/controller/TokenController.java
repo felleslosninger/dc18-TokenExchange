@@ -1,6 +1,5 @@
 package com.dc18TokenExchange.STSserver.controller;
 
-
 import com.dc18TokenExchange.STSserver.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +11,13 @@ import javax.validation.Valid;
 
 @RestController
 public class TokenController {
-
-    @Autowired
+    private final
     TokenService tokenService;
 
+    @Autowired
+    public TokenController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @PostMapping("/getNewToken")
     public ResponseEntity<String> returnNewToken(@Valid @RequestBody String accessToken) throws Exception {

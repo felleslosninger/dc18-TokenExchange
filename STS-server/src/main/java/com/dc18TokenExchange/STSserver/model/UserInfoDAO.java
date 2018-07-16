@@ -12,20 +12,16 @@ public class UserInfoDAO {
     //ID for user
     @Id
     private long userId;
-
     //User first name(s)
     @NotBlank
     @Size(min = 3, max = 30)
     private String firstName;
-
     //User last name
     @NotBlank
     @Size(min = 3, max = 30)
     private String lastName;
-
     private Long orgNum;
 
-    
     public Long getUserId() {
         return userId;
     }
