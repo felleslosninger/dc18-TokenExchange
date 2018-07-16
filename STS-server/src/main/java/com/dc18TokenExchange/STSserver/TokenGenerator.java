@@ -1,6 +1,5 @@
 package com.dc18TokenExchange.STSserver;
 
-import com.dc18TokenExchange.STSserver.service.WorkplaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
@@ -27,8 +26,7 @@ public class TokenGenerator {
     private String password;
 
     @Autowired
-    public TokenGenerator(WorkplaceService workplaceService) {
-        WorkplaceService workplaceService1 = workplaceService;
+    public TokenGenerator() {
     }
 
 

@@ -22,21 +22,9 @@
     <dependencies>
         <!--IDP-->
         <dependency>
-            <groupId>no.difi.common</groupId>
-            <artifactId>resilience-util</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>no.difi.common</groupId>
-            <artifactId>kontaktinfo-lib-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.difi.common</groupId>
-            <artifactId>idporten-lib-logging</artifactId>
         </dependency>
         <!-- SPRING-->
         <dependency>

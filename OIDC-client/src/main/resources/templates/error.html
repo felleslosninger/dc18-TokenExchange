@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/css.css}" href="../static/css/css.css"/>
 </head>
 <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-<h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|">404</h1>
+<h1 th:text="|${httpStatus}${httpStatus.reasonPhrase}|">404</h1>
 <!--/*@thymesVar id="errorMessage" type=""*/-->
 <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
 <a href="/home" th:href="@{/home}">Back to Home Page</a>
